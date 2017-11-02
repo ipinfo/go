@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
 const (
@@ -46,12 +47,18 @@ func NewClient(httpClient *http.Client) *Client {
 // in which case it is resolved relative to the BaseURL of the Client. Relative
 // URLs should always be specified without a preceding slash.
 func (c *Client) NewRequest(urlStr string) (*http.Request, error) {
-	rel, err := url.Parse(urlStr)
-	if err != nil {
+	u := new(url.URL)
+
+	if rel, err := url.Parse(urlStr); err == nil {
+		u = c.BaseURL.ResolveReference(rel)
+	} else if strings.ContainsRune(urlStr, ':') {
+		// IPv6 strings fail to parse as URLs, so let's add it as an
+		// URL Path.
+		*u = *c.BaseURL
+		u.Path += urlStr
+	} else {
 		return nil, err
 	}
-
-	u := c.BaseURL.ResolveReference(rel)
 
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
