@@ -5,7 +5,7 @@ go-ipinfo is a Go client library for accessing the [IPInfo API](https://ipinfo.i
 ## Usage
 
 ```go
-import "github.com/ipinfoio/go-ipinfo/ipinfo"
+import "github.com/ipinfo/go-ipinfo/ipinfo"
 ```
 
 The default IPInfo client is predefined and can be used without initialization.
