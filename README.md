@@ -1,5 +1,8 @@
 # [<img src="https://ipinfo.io/static/ipinfo-small.svg" alt="IPinfo" width="24"/>](https://ipinfo.io/) IPinfo Go Client Library
 
+[![License](http://img.shields.io/:license-apache-blue.svg)](LICENSE)
+[![GoDoc](https://godoc.org/github.com/ipinfo/go-ipinfo/ipinfo?status.svg)](https://godoc.org/github.com/ipinfo/go-ipinfo/ipinfo)
+
 This is the official Go client library for the [IPinfo.io](https://ipinfo.io) IP address API, allowing you to lookup your own IP address, or get any of the following details for an IP:
  - IP geolocation (city, region, country, postal code, latitude and longitude)
  - ASN details (ISP or network operator, associated domain name, and type, such as business, hosting or company)
