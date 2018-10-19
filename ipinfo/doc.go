@@ -3,7 +3,7 @@ Package ipinfo provides a client for using the IPInfo API.
 
 Usage:
 
-	import "github.com/ipinfoio/go-ipinfo/ipinfo"
+	import "github.com/ipinfo/go-ipinfo/ipinfo"
 
 The default IPInfo client is predefined and can be used without initialization.
 For example:
