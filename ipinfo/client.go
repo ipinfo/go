@@ -12,8 +12,8 @@ import (
 
 const (
 	defaultBaseURL = "https://ipinfo.io/"
-	libraryVersion = "1"
-	userAgent      = "go-ipinfo/" + libraryVersion
+	libraryVersion = "1.0"
+	userAgent      = "IPinfoClient/Go/" + libraryVersion
 )
 
 // A Client manages communication with IPInfo API.
