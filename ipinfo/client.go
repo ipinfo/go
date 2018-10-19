@@ -16,7 +16,7 @@ const (
 	userAgent      = "IPinfoClient/Go/" + libraryVersion
 )
 
-// A Client manages communication with IPInfo API.
+// A Client manages communication with IPinfo API.
 type Client struct {
 	client *http.Client // HTTP client used to communicate with the API.
 
@@ -24,11 +24,11 @@ type Client struct {
 	// trailing slash.
 	BaseURL *url.URL
 
-	// User agent used when communicating with the IPInfo API.
+	// User agent used when communicating with the IPinfo API.
 	UserAgent string
 }
 
-// NewClient returns a new IPInfo API client. If a nil httpClient is provided,
+// NewClient returns a new IPinfo API client. If a nil httpClient is provided,
 // http.DefaultClient will be used. To use authenticated API methods provide
 // http.Client with AuthTransport.
 func NewClient(httpClient *http.Client) *Client {

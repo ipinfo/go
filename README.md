@@ -1,6 +1,6 @@
 # go-ipinfo
 
-go-ipinfo is a Go client library for accessing the [IPInfo API](https://ipinfo.io/).
+go-ipinfo is a Go client library for accessing the [IPinfo API](https://ipinfo.io/).
 
 ## Usage
 
@@ -8,7 +8,7 @@ go-ipinfo is a Go client library for accessing the [IPInfo API](https://ipinfo.i
 import "github.com/ipinfo/go-ipinfo/ipinfo"
 ```
 
-The default IPInfo client is predefined and can be used without initialization.
+The default IPinfo client is predefined and can be used without initialization.
 For example:
 
 
@@ -18,7 +18,7 @@ info, err := ipinfo.GetInfo(net.ParseIP("8.8.8.8"))
 
 ### Authentication
 
-To perform authenticated API calls construct a new IPInfo client using
+To perform authenticated API calls construct a new IPinfo client using
 AuthTransport HTTP client. For example:
 
 
