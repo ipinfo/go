@@ -106,7 +106,7 @@ func (t *templateData) dump() error {
 func newGetter(fieldName, fieldTag string) *getter {
 	return &getter{
 		FieldName: fieldName,
-		FieldTag: fieldTag,
+		FieldTag:  fieldTag,
 	}
 }
 
@@ -123,7 +123,7 @@ type getter struct {
 }
 
 func sourceFilter(fi os.FileInfo) bool {
-	return !strings.HasSuffix(fi.Name(), "_test.go") && !strings.HasSuffix(fi.Name(), fileSuffix)
+	return fi.Name() == "ipinfo.go"
 }
 
 func jsonTag(s string) string {
