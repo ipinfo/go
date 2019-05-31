@@ -2,7 +2,6 @@ package ipinfo
 
 import (
 	"strings"
-	"time"
 )
 
 // ASNInfo represents ASN details.
@@ -10,7 +9,7 @@ type ASNInfo struct {
 	ASN         string      `json:"asn"`
 	Name        string      `json:"name"`
 	Country     string      `json:"country"`
-	Allocated   time.Time   `json:"allocated"`
+	Allocated   string      `json:"allocated"`
 	Registry    string      `json:"registry"`
 	Domain      string      `json:"domain"`
 	NumberOfIPs uint64      `json:"num_ips"`
