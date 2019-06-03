@@ -26,6 +26,10 @@ type Client struct {
 
 	// User agent used when communicating with the IPinfo API.
 	UserAgent string
+
+	// Cache interface implementation to prevent API quota overuse for
+	// identical requests.
+	Cache *Cache
 }
 
 // NewClient returns a new IPinfo API client. If a nil httpClient is provided,

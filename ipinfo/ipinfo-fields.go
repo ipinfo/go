@@ -23,6 +23,19 @@ func (c *Client) GetHostname(ip net.IP) (string, error) {
 	if ip != nil {
 		s = ip.String() + "/" + s
 	}
+	if c.Cache == nil {
+		return c.requestHostname(s)
+	}
+	v, err := c.Cache.GetOrRequest(s, func() (interface{}, error) {
+		return c.requestHostname(s)
+	})
+	if err != nil {
+		return "", err
+	}
+	return v.(string), err
+}
+
+func (c *Client) requestHostname(s string) (string, error) {
 	req, err := c.NewRequest(s)
 	if err != nil {
 		return "", err
@@ -54,6 +67,19 @@ func (c *Client) GetOrganization(ip net.IP) (string, error) {
 	if ip != nil {
 		s = ip.String() + "/" + s
 	}
+	if c.Cache == nil {
+		return c.requestOrganization(s)
+	}
+	v, err := c.Cache.GetOrRequest(s, func() (interface{}, error) {
+		return c.requestOrganization(s)
+	})
+	if err != nil {
+		return "", err
+	}
+	return v.(string), err
+}
+
+func (c *Client) requestOrganization(s string) (string, error) {
 	req, err := c.NewRequest(s)
 	if err != nil {
 		return "", err
@@ -85,6 +111,19 @@ func (c *Client) GetCity(ip net.IP) (string, error) {
 	if ip != nil {
 		s = ip.String() + "/" + s
 	}
+	if c.Cache == nil {
+		return c.requestCity(s)
+	}
+	v, err := c.Cache.GetOrRequest(s, func() (interface{}, error) {
+		return c.requestCity(s)
+	})
+	if err != nil {
+		return "", err
+	}
+	return v.(string), err
+}
+
+func (c *Client) requestCity(s string) (string, error) {
 	req, err := c.NewRequest(s)
 	if err != nil {
 		return "", err
@@ -116,6 +155,19 @@ func (c *Client) GetRegion(ip net.IP) (string, error) {
 	if ip != nil {
 		s = ip.String() + "/" + s
 	}
+	if c.Cache == nil {
+		return c.requestRegion(s)
+	}
+	v, err := c.Cache.GetOrRequest(s, func() (interface{}, error) {
+		return c.requestRegion(s)
+	})
+	if err != nil {
+		return "", err
+	}
+	return v.(string), err
+}
+
+func (c *Client) requestRegion(s string) (string, error) {
 	req, err := c.NewRequest(s)
 	if err != nil {
 		return "", err
@@ -147,6 +199,19 @@ func (c *Client) GetCountry(ip net.IP) (string, error) {
 	if ip != nil {
 		s = ip.String() + "/" + s
 	}
+	if c.Cache == nil {
+		return c.requestCountry(s)
+	}
+	v, err := c.Cache.GetOrRequest(s, func() (interface{}, error) {
+		return c.requestCountry(s)
+	})
+	if err != nil {
+		return "", err
+	}
+	return v.(string), err
+}
+
+func (c *Client) requestCountry(s string) (string, error) {
 	req, err := c.NewRequest(s)
 	if err != nil {
 		return "", err
@@ -178,6 +243,19 @@ func (c *Client) GetLocation(ip net.IP) (string, error) {
 	if ip != nil {
 		s = ip.String() + "/" + s
 	}
+	if c.Cache == nil {
+		return c.requestLocation(s)
+	}
+	v, err := c.Cache.GetOrRequest(s, func() (interface{}, error) {
+		return c.requestLocation(s)
+	})
+	if err != nil {
+		return "", err
+	}
+	return v.(string), err
+}
+
+func (c *Client) requestLocation(s string) (string, error) {
 	req, err := c.NewRequest(s)
 	if err != nil {
 		return "", err
@@ -209,6 +287,19 @@ func (c *Client) GetPhone(ip net.IP) (string, error) {
 	if ip != nil {
 		s = ip.String() + "/" + s
 	}
+	if c.Cache == nil {
+		return c.requestPhone(s)
+	}
+	v, err := c.Cache.GetOrRequest(s, func() (interface{}, error) {
+		return c.requestPhone(s)
+	})
+	if err != nil {
+		return "", err
+	}
+	return v.(string), err
+}
+
+func (c *Client) requestPhone(s string) (string, error) {
 	req, err := c.NewRequest(s)
 	if err != nil {
 		return "", err
@@ -240,6 +331,19 @@ func (c *Client) GetPostal(ip net.IP) (string, error) {
 	if ip != nil {
 		s = ip.String() + "/" + s
 	}
+	if c.Cache == nil {
+		return c.requestPostal(s)
+	}
+	v, err := c.Cache.GetOrRequest(s, func() (interface{}, error) {
+		return c.requestPostal(s)
+	})
+	if err != nil {
+		return "", err
+	}
+	return v.(string), err
+}
+
+func (c *Client) requestPostal(s string) (string, error) {
 	req, err := c.NewRequest(s)
 	if err != nil {
 		return "", err

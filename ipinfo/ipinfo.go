@@ -45,6 +45,19 @@ func (c *Client) GetInfo(ip net.IP) (*Info, error) {
 	if ip != nil {
 		s = ip.String()
 	}
+	if c.Cache == nil {
+		return c.requestInfo(s)
+	}
+	v, err := c.Cache.GetOrRequest(s, func() (interface{}, error) {
+		return c.requestInfo(s)
+	})
+	if err != nil {
+		return nil, err
+	}
+	return v.(*Info), err
+}
+
+func (c *Client) requestInfo(s string) (*Info, error) {
 	req, err := c.NewRequest(s)
 	if err != nil {
 		return nil, err
@@ -67,6 +80,19 @@ func (c *Client) GetGeo(ip net.IP) (*Geo, error) {
 	if ip != nil {
 		s = ip.String() + "/geo"
 	}
+	if c.Cache == nil {
+		return c.requestGeo(s)
+	}
+	v, err := c.Cache.GetOrRequest(s, func() (interface{}, error) {
+		return c.requestGeo(s)
+	})
+	if err != nil {
+		return nil, err
+	}
+	return v.(*Geo), err
+}
+
+func (c *Client) requestGeo(s string) (*Geo, error) {
 	req, err := c.NewRequest(s)
 	if err != nil {
 		return nil, err
@@ -91,6 +117,19 @@ func (c *Client) GetIP(ip net.IP) (net.IP, error) {
 	if ip != nil {
 		s = ip.String() + "/" + s
 	}
+	if c.Cache == nil {
+		return c.requestIP(s)
+	}
+	v, err := c.Cache.GetOrRequest(s, func() (interface{}, error) {
+		return c.requestIP(s)
+	})
+	if err != nil {
+		return nil, err
+	}
+	return v.(net.IP), err
+}
+
+func (c *Client) requestIP(s string) (net.IP, error) {
 	req, err := c.NewRequest(s)
 	if err != nil {
 		return nil, err
