@@ -160,6 +160,19 @@ func (c *Client) Get{{.FieldName}}(ip net.IP) (string, error) {
 	if ip != nil {
 		s = ip.String() + "/" + s
 	}
+	if c.Cache == nil {
+		return c.request{{.FieldName}}(s)
+	}
+	v, err := c.Cache.GetOrRequest(s, func() (interface{}, error) {
+		return c.request{{.FieldName}}(s)
+	})
+	if err != nil {
+		return "", err
+	}
+	return v.(string), err
+}
+
+func (c *Client) request{{.FieldName}}(s string) (string, error) {
 	req, err := c.NewRequest(s)
 	if err != nil {
 		return "", err
