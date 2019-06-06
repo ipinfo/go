@@ -182,10 +182,6 @@ func (c *Client) request{{.FieldName}}(s string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	vs := strings.TrimSpace(v.String())
-	if vs == "undefined" {
-		vs = ""
-	}
 	return vs, nil
 }
 {{end}}

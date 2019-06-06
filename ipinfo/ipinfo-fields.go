@@ -45,10 +45,6 @@ func (c *Client) requestHostname(s string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	vs := strings.TrimSpace(v.String())
-	if vs == "undefined" {
-		vs = ""
-	}
 	return vs, nil
 }
 
@@ -88,10 +84,6 @@ func (c *Client) requestOrganization(s string) (string, error) {
 	_, err = c.Do(req, v)
 	if err != nil {
 		return "", err
-	}
-	vs := strings.TrimSpace(v.String())
-	if vs == "undefined" {
-		vs = ""
 	}
 	return vs, nil
 }
@@ -133,10 +125,6 @@ func (c *Client) requestCity(s string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	vs := strings.TrimSpace(v.String())
-	if vs == "undefined" {
-		vs = ""
-	}
 	return vs, nil
 }
 
@@ -176,10 +164,6 @@ func (c *Client) requestRegion(s string) (string, error) {
 	_, err = c.Do(req, v)
 	if err != nil {
 		return "", err
-	}
-	vs := strings.TrimSpace(v.String())
-	if vs == "undefined" {
-		vs = ""
 	}
 	return vs, nil
 }
@@ -221,10 +205,6 @@ func (c *Client) requestCountry(s string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	vs := strings.TrimSpace(v.String())
-	if vs == "undefined" {
-		vs = ""
-	}
 	return vs, nil
 }
 
@@ -264,10 +244,6 @@ func (c *Client) requestLocation(s string) (string, error) {
 	_, err = c.Do(req, v)
 	if err != nil {
 		return "", err
-	}
-	vs := strings.TrimSpace(v.String())
-	if vs == "undefined" {
-		vs = ""
 	}
 	return vs, nil
 }
@@ -309,10 +285,6 @@ func (c *Client) requestPhone(s string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	vs := strings.TrimSpace(v.String())
-	if vs == "undefined" {
-		vs = ""
-	}
 	return vs, nil
 }
 
@@ -352,10 +324,6 @@ func (c *Client) requestPostal(s string) (string, error) {
 	_, err = c.Do(req, v)
 	if err != nil {
 		return "", err
-	}
-	vs := strings.TrimSpace(v.String())
-	if vs == "undefined" {
-		vs = ""
 	}
 	return vs, nil
 }
