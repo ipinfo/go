@@ -1,4 +1,4 @@
-package ipinfo
+package ipinfo // import "github.com/ipinfo/go-ipinfo/ipinfo"
 
 import (
 	"sync"

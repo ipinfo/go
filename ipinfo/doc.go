@@ -23,4 +23,4 @@ AuthTransport HTTP client. For example:
 Note that when using an authenticated Client, all calls made by the client will
 include the specified token.
 */
-package ipinfo
+package ipinfo // import "github.com/ipinfo/go-ipinfo/ipinfo"
