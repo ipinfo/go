@@ -141,7 +141,6 @@ package {{.Package}} // import "github.com/ipinfo/go-ipinfo/{{.Package}}"
 import (
 	"bytes"
 	"net"
-	"strings"
 )
 
 {{range .Getters}}
@@ -182,7 +181,7 @@ func (c *Client) request{{.FieldName}}(s string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return vs, nil
+	return v.String(), nil
 }
 {{end}}
 `

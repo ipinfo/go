@@ -5,7 +5,6 @@ package ipinfo // import "github.com/ipinfo/go-ipinfo/ipinfo"
 import (
 	"bytes"
 	"net"
-	"strings"
 )
 
 // GetHostname returns a specific field "hostname" value from the
@@ -45,7 +44,7 @@ func (c *Client) requestHostname(s string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return vs, nil
+	return v.String(), nil
 }
 
 // GetOrganization returns a specific field "org" value from the
@@ -85,7 +84,7 @@ func (c *Client) requestOrganization(s string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return vs, nil
+	return v.String(), nil
 }
 
 // GetCity returns a specific field "city" value from the
@@ -125,7 +124,7 @@ func (c *Client) requestCity(s string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return vs, nil
+	return v.String(), nil
 }
 
 // GetRegion returns a specific field "region" value from the
@@ -165,7 +164,7 @@ func (c *Client) requestRegion(s string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return vs, nil
+	return v.String(), nil
 }
 
 // GetCountry returns a specific field "country" value from the
@@ -205,7 +204,7 @@ func (c *Client) requestCountry(s string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return vs, nil
+	return v.String(), nil
 }
 
 // GetLocation returns a specific field "loc" value from the
@@ -245,7 +244,7 @@ func (c *Client) requestLocation(s string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return vs, nil
+	return v.String(), nil
 }
 
 // GetPhone returns a specific field "phone" value from the
@@ -285,7 +284,7 @@ func (c *Client) requestPhone(s string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return vs, nil
+	return v.String(), nil
 }
 
 // GetPostal returns a specific field "postal" value from the
@@ -325,5 +324,5 @@ func (c *Client) requestPostal(s string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return vs, nil
+	return v.String(), nil
 }
