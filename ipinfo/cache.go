@@ -1,9 +1,9 @@
-package ipinfo // import "github.com/ipinfo/go-ipinfo/ipinfo"
+package ipinfo // import "github.com/ipinfo/go/ipinfo"
 
 import (
 	"sync"
 
-	"github.com/ipinfo/go-ipinfo/ipinfo/cache"
+	"github.com/ipinfo/go/ipinfo/cache"
 )
 
 type Cache struct {
@@ -17,7 +17,10 @@ func NewCache(engine cache.Interface) *Cache {
 
 type EvaluatorFunc func() (interface{}, error)
 
-func (c *Cache) GetOrRequest(key string, evaluator EvaluatorFunc) (interface{}, error) {
+func (c *Cache) GetOrRequest(
+	key string,
+	evaluator EvaluatorFunc,
+) (interface{}, error) {
 	value, _ := c.requestLocks.LoadOrStore(key, &sync.Mutex{})
 	mutex := value.(*sync.Mutex)
 	mutex.Lock()

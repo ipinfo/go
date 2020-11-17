@@ -5,8 +5,8 @@ import (
 	"log"
 	"net"
 
-	"github.com/ipinfo/go-ipinfo/ipinfo"
-	"github.com/ipinfo/go-ipinfo/ipinfo/cache"
+	"github.com/ipinfo/go/ipinfo"
+	"github.com/ipinfo/go/ipinfo/cache"
 )
 
 type DummyCacheEngine struct {

@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/ipinfo/go-ipinfo/ipinfo"
+	"github.com/ipinfo/go/ipinfo"
 )
 
 func main() {

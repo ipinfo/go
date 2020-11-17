@@ -6,8 +6,8 @@ import (
 	"net"
 	"time"
 
-	"github.com/ipinfo/go-ipinfo/ipinfo"
-	"github.com/ipinfo/go-ipinfo/ipinfo/cache"
+	"github.com/ipinfo/go/ipinfo"
+	"github.com/ipinfo/go/ipinfo/cache"
 )
 
 func main() {
