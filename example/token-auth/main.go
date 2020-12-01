@@ -13,12 +13,9 @@ func main() {
 	var c *ipinfo.Client
 
 	if token := os.Getenv("TOKEN"); token != "" {
-		tp := ipinfo.AuthTransport{
-			Token: token,
-		}
-		c = ipinfo.NewClient(tp.Client())
+		c = ipinfo.NewClient(ipinfo.NewClient(nil, nil, token))
 	} else {
-		c = ipinfo.GetClient()
+		c = ipinfo.DefaultClient
 	}
 	if len(os.Args) == 1 {
 		info, err := c.GetInfo(nil)
@@ -41,6 +38,7 @@ func main() {
 }
 
 func printInfo(info *ipinfo.Info) {
-	fmt.Printf("IP: %v\nHostname: %s\nOrganization: %s\nCity: %s\nRegion: %s\nCountry: %s\nLocation: %s\nPhone: %s\nPostal: %s\n",
+	fmt.Printf(
+		"IP: %v\nHostname: %s\nOrganization: %s\nCity: %s\nRegion: %s\nCountry: %s\nLocation: %s\nPhone: %s\nPostal: %s\n",
 		info.IP, info.Hostname, info.Organization, info.City, info.Region, info.Country, info.Location, info.Phone, info.Postal)
 }

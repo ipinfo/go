@@ -10,17 +10,12 @@ For example:
 
 	info, err := ipinfo.GetInfo(net.ParseIP("8.8.8.8"))
 
-Authentication
+Authorization
 
-To perform authenticated API calls construct a new IPinfo client using
-AuthTransport HTTP client. For example:
+To perform authorized API calls with more data and higher limits, pass in a
+non-empty token to NewClient. For example:
 
-	authTransport := ipinfo.AuthTransport{Token: "MY_TOKEN"}
-	httpClient := authTransport.Client()
-	client := ipinfo.NewClient(httpClient)
+	client := ipinfo.NewClient(nil, nil, "MY_TOKEN")
 	info, err := client.GetInfo(net.ParseIP("8.8.8.8"))
-
-Note that when using an authenticated Client, all calls made by the client will
-include the specified token.
 */
 package ipinfo

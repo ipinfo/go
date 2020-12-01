@@ -8,138 +8,70 @@ import (
 	"strings"
 )
 
-var c *Client
+type Data struct {
+	Ip       net.IP       `json:"ip"`
+	Hostname string       `json:"hostname"`
+	City     string       `json:"city"`
+	Region   string       `json:"region"`
+	Country  string       `json:"country"`
+	Location string       `json:"loc"`
+	Org      string       `json:"org"`
+	Postal   string       `json:"postal"`
+	Timezone string       `json:"timezone"`
+	Asn      *DataAsn     `json:"asn"`
+	Company  *DataCompany `json:"company"`
+	Carrier  *DataCarrier `json:"carrier"`
+	Privacy  *DataPrivacy `json:"privacy"`
+	Abuse    *DataAbuse   `json:"abuse"`
+	Domains  *DataDomains `json:"domains"`
+}
+
+type DataAsn struct {
+	Asn    string `json:"asn"`
+	Name   string `json:"name"`
+	Domain string `json:"domain"`
+	Route  string `json:"route"`
+	Type   string `json:"type"`
+}
+
+type DataCompany struct {
+	Name   string `json:"name"`
+	Domain string `json:"domain"`
+	Type   string `json:"type"`
+}
+
+type DataCarrier struct {
+	Name string `json:"name"`
+	Mcc  string `json:"mcc"`
+	Mnc  string `json:"mnc"`
+}
+
+type DataPrivacy struct {
+	Vpn     bool `json:"vpn"`
+	Proxy   bool `json:"proxy"`
+	Tor     bool `json:"tor"`
+	Hosting bool `json:"hosting"`
+}
+
+type DataAbuse struct {
+	Address string `json:"address"`
+	Country string `json:"country"`
+	Email   string `json:"email"`
+	Name    string `json:"name"`
+	Network string `json:"network"`
+	Phone   string `json:"phone"`
+}
+
+type DataDomains struct {
+	Ip      string   `json:"ip"`
+	Total   uint64   `json:"total"`
+	Domains []string `json:"domains"`
+}
+
+// Global, default client available to the user via `ipinfo.DefaultClient`.
+var DefaultClient *Client
 
 func init() {
-	c = NewClient(nil)
-}
-
-// Info represents full IP details.
-type Info struct {
-	Geo
-	Hostname     string `json:"hostname"`
-	Organization string `json:"org"`
-}
-
-// Geo represents IP geolocation information.
-type Geo struct {
-	IP       net.IP `json:"ip"`
-	City     string `json:"city"`
-	Region   string `json:"region"`
-	Country  string `json:"country"`
-	Location string `json:"loc"`
-	Phone    string `json:"phone"`
-	Postal   string `json:"postal"`
-	Timezone string `json:"timezone"`
-}
-
-// GetInfo returns full details for the specified IP. If nil was provided
-// instead of ip, it returns details for the caller's own IP.
-func GetInfo(ip net.IP) (*Info, error) {
-	return c.GetInfo(ip)
-}
-
-// GetInfo returns full details for the specified IP. If nil was provided
-// instead of ip, it returns details for the caller's own IP.
-func (c *Client) GetInfo(ip net.IP) (*Info, error) {
-	var s string
-	if ip != nil {
-		s = ip.String()
-	}
-	if c.Cache == nil {
-		return c.requestInfo(s)
-	}
-	v, err := c.Cache.GetOrRequest(s, func() (interface{}, error) {
-		return c.requestInfo(s)
-	})
-	if err != nil {
-		return nil, err
-	}
-	return v.(*Info), err
-}
-
-func (c *Client) requestInfo(s string) (*Info, error) {
-	req, err := c.NewRequest(s)
-	if err != nil {
-		return nil, err
-	}
-	v := new(Info)
-	_, err = c.Do(req, v)
-	return v, err
-}
-
-// GetGeo returns geolocation information for the specified IP. If nil was
-// provided instead of ip, it returns details for the caller's own IP.
-func GetGeo(ip net.IP) (*Geo, error) {
-	return c.GetGeo(ip)
-}
-
-// GetGeo returns geolocation information for the specified IP. If nil was
-// provided instead of ip, it returns details for the caller's own IP.
-func (c *Client) GetGeo(ip net.IP) (*Geo, error) {
-	s := "geo"
-	if ip != nil {
-		s = ip.String() + "/geo"
-	}
-	if c.Cache == nil {
-		return c.requestGeo(s)
-	}
-	v, err := c.Cache.GetOrRequest(s, func() (interface{}, error) {
-		return c.requestGeo(s)
-	})
-	if err != nil {
-		return nil, err
-	}
-	return v.(*Geo), err
-}
-
-func (c *Client) requestGeo(s string) (*Geo, error) {
-	req, err := c.NewRequest(s)
-	if err != nil {
-		return nil, err
-	}
-	v := new(Geo)
-	_, err = c.Do(req, v)
-	return v, err
-}
-
-// GetIP returns a specific field "ip" value from the
-// API for the provided ip. If nil was provided instead of ip, it returns
-// details for the caller's own IP.
-func GetIP(ip net.IP) (net.IP, error) {
-	return c.GetIP(ip)
-}
-
-// GetIP returns a specific field "ip" value from the
-// API for the provided ip. If nil was provided instead of ip, it returns
-// details for the caller's own IP.
-func (c *Client) GetIP(ip net.IP) (net.IP, error) {
-	s := "ip"
-	if ip != nil {
-		s = ip.String() + "/" + s
-	}
-	if c.Cache == nil {
-		return c.requestIP(s)
-	}
-	v, err := c.Cache.GetOrRequest(s, func() (interface{}, error) {
-		return c.requestIP(s)
-	})
-	if err != nil {
-		return nil, err
-	}
-	return v.(net.IP), err
-}
-
-func (c *Client) requestIP(s string) (net.IP, error) {
-	req, err := c.NewRequest(s)
-	if err != nil {
-		return nil, err
-	}
-	v := new(bytes.Buffer)
-	_, err = c.Do(req, v)
-	if err != nil {
-		return nil, err
-	}
-	s = strings.TrimSpace(v.String())
-	return net.ParseIP(s), nil
+	/* Create a global, default client. */
+	DefaultClient = NewClient(nil, nil, "")
 }

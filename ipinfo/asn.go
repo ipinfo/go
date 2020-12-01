@@ -4,52 +4,56 @@ import (
 	"strings"
 )
 
-// ASNInfo represents ASN details.
-type ASNInfo struct {
-	ASN         string      `json:"asn"`
-	Name        string      `json:"name"`
-	Country     string      `json:"country"`
-	Allocated   string      `json:"allocated"`
-	Registry    string      `json:"registry"`
-	Domain      string      `json:"domain"`
-	NumberOfIPs uint64      `json:"num_ips"`
-	Type        string      `json:"type"`
-	Prefixes    []ASNPrefix `json:"prefixes"`
-	Prefixes6   []ASNPrefix `json:"prefixes6"`
+type DataAsnDetails struct {
+	Asn         string                 `json:"asn"`
+	Name        string                 `json:"name"`
+	Country     string                 `json:"country"`
+	Allocated   string                 `json:"allocated"`
+	Registry    string                 `json:"registry"`
+	Domain      string                 `json:"domain"`
+	NumIps      uint64                 `json:"num_ips"`
+	Type        string                 `json:"type"`
+	Prefixes    []DataAsnDetailsPrefix `json:"prefixes"`
+	Prefixes6   []DataAsnDetailsPrefix `json:"prefixes6"`
+	Peers       []string               `json:"peers"`
+	Upstreams   []string               `json:"upstreams"`
+	Downstreams []string               `json:"downstreams"`
 }
 
-// ASNPrefix represents an ASN prefix.
-type ASNPrefix struct {
+type DataAsnDetailsPrefix struct {
 	Netblock string `json:"netblock"`
 	ID       string `json:"id"`
 	Name     string `json:"name"`
 	Country  string `json:"country"`
+	Size     string `json:"size"`
+	Status   string `json:"status"`
+	Domain   string `json:"domain"`
 }
 
-// InvalidASNError is reported when the invalid ASN was specified.
-type InvalidASNError struct {
-	ASN string
+// InvalidAsnError is reported when the invalid ASN was specified.
+type InvalidAsnError struct {
+	Asn string
 }
 
-func (err *InvalidASNError) Error() string {
+func (err *InvalidAsnError) Error() string {
 	return "invalid ASN: " + err.ASN
 }
 
-// ASN returns the details for the specified ASN.
-func ASN(asn string) (*ASNInfo, error) {
-	return c.ASN(asn)
+// AsnDetails returns the details for the specified ASN.
+func AsnDetails(asn string) (*DataAsnDetails, error) {
+	return DefaultClient.AsnDetails(asn)
 }
 
-// ASN returns the details for the specified ASN.
-func (c *Client) ASN(asn string) (*ASNInfo, error) {
+// AsnDetails returns the details for the specified ASN.
+func (c *Client) AsnDetails(asn string) (*DataAsnDetails, error) {
 	if !strings.HasPrefix(asn, "AS") {
-		return nil, &InvalidASNError{ASN: asn}
+		return nil, &InvalidAsnError{Asn: asn}
 	}
 	req, err := c.NewRequest(asn + "/json")
 	if err != nil {
 		return nil, err
 	}
-	v := new(ASNInfo)
+	v := new(DataAsnDetails)
 	_, err = c.Do(req, v)
 	return v, err
 }

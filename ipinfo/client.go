@@ -11,14 +11,14 @@ import (
 )
 
 const (
-	defaultBaseURL = "https://ipinfo.io/"
-	libraryVersion = "1.0"
-	userAgent      = "IPinfoClient/Go/" + libraryVersion
+	defaultBaseURL   = "https://ipinfo.io/"
+	defaultUserAgent = "IPinfoClient/Go/2.0.0"
 )
 
-// A Client manages communication with IPinfo API.
+// A Client is the main handler to communicate with the IPinfo API.
 type Client struct {
-	client *http.Client // HTTP client used to communicate with the API.
+	// HTTP client used to communicate with the API.
+	client *http.Client
 
 	// Base URL for API requests. BaseURL should always be specified with a
 	// trailing slash.
@@ -30,20 +30,33 @@ type Client struct {
 	// Cache interface implementation to prevent API quota overuse for
 	// identical requests.
 	Cache *Cache
+
+	// The API token used for authorization for more data and higher limits.
+	Token string
 }
 
-// NewClient returns a new IPinfo API client. If a nil httpClient is provided,
-// http.DefaultClient will be used. To use authenticated API methods provide
-// http.Client with AuthTransport.
-func NewClient(httpClient *http.Client) *Client {
+// NewClient returns a new IPinfo API client.
+//
+// If `httpClient` is nil, `http.DefaultClient` will be used.
+// If `cache` is nil, no cache is automatically assigned. You may set one later
+// at any time with `client.SetCache`.
+// If `token` is empty, the API will be queried without any token.
+func NewClient(
+	httpClient *http.Client,
+	cache *Cache,
+	token string,
+) *Client {
 	if httpClient == nil {
 		httpClient = http.DefaultClient
 	}
+
 	baseURL, _ := url.Parse(defaultBaseURL)
 	return &Client{
 		client:    httpClient,
 		BaseURL:   baseURL,
-		UserAgent: userAgent,
+		UserAgent: defaultUserAgent,
+		Cache:     cache,
+		Token:     token,
 	}
 }
 
@@ -56,8 +69,7 @@ func (c *Client) NewRequest(urlStr string) (*http.Request, error) {
 	if rel, err := url.Parse(urlStr); err == nil {
 		u = c.BaseURL.ResolveReference(rel)
 	} else if strings.ContainsRune(urlStr, ':') {
-		// IPv6 strings fail to parse as URLs, so let's add it as an
-		// URL Path.
+		// IPv6 strings fail to parse as URLs, so let's add it as a URL Path.
 		*u = *c.BaseURL
 		u.Path += urlStr
 	} else {
@@ -72,6 +84,9 @@ func (c *Client) NewRequest(urlStr string) (*http.Request, error) {
 	req.Header.Set("Accept", "application/json")
 	if c.UserAgent != "" {
 		req.Header.Set("User-Agent", c.UserAgent)
+	}
+	if c.Token != "" {
+		req.Header.Set("Authorization", "Bearer "+c.Token)
 	}
 
 	return req, nil
@@ -138,9 +153,4 @@ func CheckResponse(r *http.Response) error {
 		json.Unmarshal(data, errorResponse)
 	}
 	return errorResponse
-}
-
-// GetClient get the global Client instance.
-func GetClient() *Client {
-	return c
 }
