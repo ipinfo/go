@@ -1,4 +1,4 @@
-package cache // import "github.com/ipinfo/go/ipinfo/cache"
+package cache
 
 import (
 	"time"

@@ -1,4 +1,4 @@
-package ipinfo // import "github.com/ipinfo/go/ipinfo"
+package ipinfo
 
 import (
 	"net/http"
