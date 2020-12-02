@@ -14,9 +14,9 @@ func main() {
 	// Provide token as an environment variable `TOKEN`,
 	// e.g. TOKEN="XXXXXXXXXXXXXX" go run main.go
 	client := ipinfo.NewClient(nil, nil, os.Getenv("TOKEN"))
-	asnInfo, err := client.ASN("AS7922")
+	asnDetails, err := client.GetAsnDetails("AS7922")
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(asnInfo)
+	fmt.Printf("%v\n", asnDetails)
 }

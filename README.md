@@ -40,7 +40,7 @@ import (
 func main() {
 	// Get access token by signing up a free account at https://ipinfo.io/signup
 	client := ipinfo.NewClient(nil, nil, "MY_TOKEN")
-	info, err := client.GetInfo(net.ParseIP("8.8.8.8"))
+	info, err := client.GetIpInfo(net.ParseIP("8.8.8.8"))
 	if err != nil {
 		log.Fatal(err)
 	}

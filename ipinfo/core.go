@@ -2,6 +2,7 @@ package ipinfo
 
 import (
 	"net"
+	"net/http"
 )
 
 type Core struct {
@@ -65,16 +66,24 @@ type CoreDomains struct {
 }
 
 // GetIpInfo returns the details for the specified IP.
-func GetIpInfo(ip net.IP) (*IpInfo, error) {
+func GetIpInfo(ip net.IP) (*Core, error) {
 	return DefaultClient.GetIpInfo(ip)
 }
 
 // GetIpInfo returns the details for the specified IP.
-func (c *Client) GetIpInfo(ip net.IP) (*IpInfo, error) {
-	req, err := c.NewRequest(ip.String() + "/json")
+func (c *Client) GetIpInfo(ip net.IP) (*Core, error) {
+	var req *http.Request
+	var err error
+
+	if ip == nil {
+		req, err = c.NewRequest("json")
+	} else {
+		req, err = c.NewRequest(ip.String() + "/json")
+	}
 	if err != nil {
 		return nil, err
 	}
+
 	v := new(Core)
 	_, err = c.Do(req, v)
 	return v, err
