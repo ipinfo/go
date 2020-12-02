@@ -38,9 +38,12 @@ type Client struct {
 // NewClient returns a new IPinfo API client.
 //
 // If `httpClient` is nil, `http.DefaultClient` will be used.
+//
 // If `cache` is nil, no cache is automatically assigned. You may set one later
 // at any time with `client.SetCache`.
-// If `token` is empty, the API will be queried without any token.
+//
+// If `token` is empty, the API will be queried without any token. You may set
+// one later at any time with `client.SetToken`.
 func NewClient(
 	httpClient *http.Client,
 	cache *Cache,
@@ -153,4 +156,24 @@ func CheckResponse(r *http.Response) error {
 		json.Unmarshal(data, errorResponse)
 	}
 	return errorResponse
+}
+
+/* SetCache */
+
+func SetCache(cache *Cache) {
+	DefaultClient.SetCache(cache)
+}
+
+func (c *Client) SetCache(cache *Cache) {
+	c.Cache = cache
+}
+
+/* SetToken */
+
+func SetToken(token string) {
+	DefaultClient.SetToken(token)
+}
+
+func (c *Client) SetToken(token string) {
+	c.Token = token
 }

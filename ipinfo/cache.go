@@ -42,11 +42,3 @@ func (c *Cache) GetOrRequest(
 	}
 	return nil, err
 }
-
-func SetCache(cache *Cache) {
-	c.SetCache(cache)
-}
-
-func (c *Client) SetCache(cache *Cache) {
-	c.Cache = cache
-}

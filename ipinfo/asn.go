@@ -36,16 +36,16 @@ type InvalidAsnError struct {
 }
 
 func (err *InvalidAsnError) Error() string {
-	return "invalid ASN: " + err.ASN
+	return "invalid ASN: " + err.Asn
 }
 
-// AsnDetails returns the details for the specified ASN.
-func AsnDetails(asn string) (*AsnDetails, error) {
-	return DefaultClient.AsnDetails(asn)
+// GetAsnDetails returns the details for the specified ASN.
+func GetAsnDetails(asn string) (*AsnDetails, error) {
+	return DefaultClient.GetAsnDetails(asn)
 }
 
-// AsnDetails returns the details for the specified ASN.
-func (c *Client) AsnDetails(asn string) (*AsnDetails, error) {
+// GetAsnDetails returns the details for the specified ASN.
+func (c *Client) GetAsnDetails(asn string) (*AsnDetails, error) {
 	if !strings.HasPrefix(asn, "AS") {
 		return nil, &InvalidAsnError{Asn: asn}
 	}
