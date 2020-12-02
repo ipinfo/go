@@ -2,7 +2,6 @@ package cache
 
 import "errors"
 
-// Errors
 var (
 	ErrNotFound = errors.New("key not found")
 )
