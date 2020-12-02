@@ -63,3 +63,19 @@ type CoreDomains struct {
 	Total   uint64   `json:"total"`
 	Domains []string `json:"domains"`
 }
+
+// GetIpInfo returns the details for the specified IP.
+func GetIpInfo(ip net.IP) (*IpInfo, error) {
+	return DefaultClient.GetIpInfo(ip)
+}
+
+// GetIpInfo returns the details for the specified IP.
+func (c *Client) GetIpInfo(ip net.IP) (*IpInfo, error) {
+	req, err := c.NewRequest(ip.String() + "/json")
+	if err != nil {
+		return nil, err
+	}
+	v := new(Core)
+	_, err = c.Do(req, v)
+	return v, err
+}
