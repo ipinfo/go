@@ -4,6 +4,7 @@ import (
 	"strings"
 )
 
+// ASNDetails represents details for an ASN.
 type ASNDetails struct {
 	ASN         string             `json:"asn"`
 	Name        string             `json:"name"`
@@ -20,6 +21,7 @@ type ASNDetails struct {
 	Downstreams []string           `json:"downstreams"`
 }
 
+// ASNDetailsPrefix represents data for prefixes managed by an ASN.
 type ASNDetailsPrefix struct {
 	Netblock string `json:"netblock"`
 	ID       string `json:"id"`
