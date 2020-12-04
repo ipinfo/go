@@ -9,17 +9,17 @@ import (
 	"github.com/ipinfo/go/ipinfo/cache"
 )
 
-type DummyCacheEngine struct {
+type dummyCacheEngine struct {
 	cache map[string]interface{}
 }
 
-func NewDummyCacheEngine() *DummyCacheEngine {
-	return &DummyCacheEngine{
+func newDummyCacheEngine() *dummyCacheEngine {
+	return &dummyCacheEngine{
 		cache: make(map[string]interface{}),
 	}
 }
 
-func (c *DummyCacheEngine) Get(key string) (interface{}, error) {
+func (c *dummyCacheEngine) Get(key string) (interface{}, error) {
 	log.Printf("[CACHE]: Trying to get value for key %q", key)
 	if v, ok := c.cache[key]; ok {
 		log.Printf("[CACHE]: Got value for key %q=%q", key, v)
@@ -29,16 +29,16 @@ func (c *DummyCacheEngine) Get(key string) (interface{}, error) {
 	return nil, cache.ErrNotFound
 }
 
-func (c *DummyCacheEngine) Set(key string, value interface{}) error {
+func (c *dummyCacheEngine) Set(key string, value interface{}) error {
 	log.Printf("[CACHE]: Setting value for key %q=%q", key, value)
 	c.cache[key] = value
 	return nil
 }
 
-var DummyCache = ipinfo.NewCache(NewDummyCacheEngine())
+var dummyCache = ipinfo.NewCache(newDummyCacheEngine())
 
 func main() {
-	ipinfo.SetCache(DummyCache)
+	ipinfo.SetCache(dummyCache)
 	ip := net.ParseIP("8.8.8.8")
 
 	for i := 0; i < 2; i++ {
