@@ -160,20 +160,24 @@ func CheckResponse(r *http.Response) error {
 
 /* SetCache */
 
+// SetCache assigns a cache to the package-level client.
 func SetCache(cache *Cache) {
 	DefaultClient.SetCache(cache)
 }
 
+// SetCache assigns a cache to the client `c`.
 func (c *Client) SetCache(cache *Cache) {
 	c.Cache = cache
 }
 
 /* SetToken */
 
+// SetToken assigns a token to the package-level client.
 func SetToken(token string) {
 	DefaultClient.SetToken(token)
 }
 
+// SetToken assigns a token to the client `c`.
 func (c *Client) SetToken(token string) {
 	c.Token = token
 }
