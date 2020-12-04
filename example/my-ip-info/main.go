@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	core, err := ipinfo.GetIpInfo(nil)
+	core, err := ipinfo.GetIPInfo(nil)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -43,7 +43,7 @@ func main() {
 
 	for i := 0; i < 2; i++ {
 		fmt.Println([]string{"Actual requests", "From cache"}[i])
-		if v, err := ipinfo.GetIpInfo(ip); err != nil {
+		if v, err := ipinfo.GetIPInfo(ip); err != nil {
 			log.Println(err)
 		} else {
 			fmt.Printf("IP: %v\n", v)

@@ -6,7 +6,7 @@ import (
 )
 
 type Core struct {
-	Ip       net.IP       `json:"ip"`
+	IP       net.IP       `json:"ip"`
 	Hostname string       `json:"hostname"`
 	City     string       `json:"city"`
 	Region   string       `json:"region"`
@@ -60,18 +60,18 @@ type CoreAbuse struct {
 }
 
 type CoreDomains struct {
-	Ip      string   `json:"ip"`
+	IP      string   `json:"ip"`
 	Total   uint64   `json:"total"`
 	Domains []string `json:"domains"`
 }
 
-// GetIpInfo returns the details for the specified IP.
-func GetIpInfo(ip net.IP) (*Core, error) {
-	return DefaultClient.GetIpInfo(ip)
+// GetIPInfo returns the details for the specified IP.
+func GetIPInfo(ip net.IP) (*Core, error) {
+	return DefaultClient.GetIPInfo(ip)
 }
 
-// GetIpInfo returns the details for the specified IP.
-func (c *Client) GetIpInfo(ip net.IP) (*Core, error) {
+// GetIPInfo returns the details for the specified IP.
+func (c *Client) GetIPInfo(ip net.IP) (*Core, error) {
 	var req *http.Request
 	var err error
 

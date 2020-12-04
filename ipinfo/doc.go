@@ -8,7 +8,7 @@ Usage:
 The default IPinfo client is predefined and can be used without initialization.
 For example:
 
-	info, err := ipinfo.GetIpInfo(net.ParseIP("8.8.8.8"))
+	info, err := ipinfo.GetIPInfo(net.ParseIP("8.8.8.8"))
 
 Authorization
 
@@ -16,6 +16,6 @@ To perform authorized API calls with more data and higher limits, pass in a
 non-empty token to NewClient. For example:
 
 	client := ipinfo.NewClient(nil, nil, "MY_TOKEN")
-	info, err := client.GetIpInfo(net.ParseIP("8.8.8.8"))
+	info, err := client.GetIPInfo(net.ParseIP("8.8.8.8"))
 */
 package ipinfo

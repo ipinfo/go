@@ -11,7 +11,7 @@ type AsnDetails struct {
 	Allocated   string             `json:"allocated"`
 	Registry    string             `json:"registry"`
 	Domain      string             `json:"domain"`
-	NumIps      uint64             `json:"num_ips"`
+	NumIPs      uint64             `json:"num_ips"`
 	Type        string             `json:"type"`
 	Prefixes    []AsnDetailsPrefix `json:"prefixes"`
 	Prefixes6   []AsnDetailsPrefix `json:"prefixes6"`

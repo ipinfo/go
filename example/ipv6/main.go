@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	core, err := ipinfo.GetIpInfo(net.ParseIP("2a03:2880:f10a:83:face:b00c:0:25de"))
+	core, err := ipinfo.GetIPInfo(net.ParseIP("2a03:2880:f10a:83:face:b00c:0:25de"))
 	if err != nil {
 		log.Fatal(err)
 	}
