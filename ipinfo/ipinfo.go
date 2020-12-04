@@ -2,7 +2,7 @@
 
 package ipinfo
 
-// Global, default client available to the user via `ipinfo.DefaultClient`.
+// DefaultClient is the package-level client available to the user.
 var DefaultClient *Client
 
 func init() {
