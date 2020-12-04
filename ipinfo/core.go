@@ -15,7 +15,7 @@ type Core struct {
 	Org      string       `json:"org"`
 	Postal   string       `json:"postal"`
 	Timezone string       `json:"timezone"`
-	Asn      *CoreAsn     `json:"asn"`
+	ASN      *CoreASN     `json:"asn"`
 	Company  *CoreCompany `json:"company"`
 	Carrier  *CoreCarrier `json:"carrier"`
 	Privacy  *CorePrivacy `json:"privacy"`
@@ -23,8 +23,8 @@ type Core struct {
 	Domains  *CoreDomains `json:"domains"`
 }
 
-type CoreAsn struct {
-	Asn    string `json:"asn"`
+type CoreASN struct {
+	ASN    string `json:"asn"`
 	Name   string `json:"name"`
 	Domain string `json:"domain"`
 	Route  string `json:"route"`
