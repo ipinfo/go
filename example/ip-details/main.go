@@ -20,7 +20,7 @@ func main() {
 
 	/* default to user IP */
 	if len(os.Args) == 1 {
-		core, err := ipinfo.GetIpInfo(nil)
+		core, err := c.GetIpInfo(nil)
 		if err != nil {
 			log.Println(err)
 		}
@@ -33,7 +33,7 @@ func main() {
 		if ip == nil {
 			continue
 		}
-		core, err := ipinfo.GetIpInfo(ip)
+		core, err := c.GetIpInfo(ip)
 		if err != nil {
 			log.Println(err)
 		}
