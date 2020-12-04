@@ -5,6 +5,7 @@ import (
 	"net/http"
 )
 
+// Core represents data from the Core API.
 type Core struct {
 	IP       net.IP       `json:"ip"`
 	Hostname string       `json:"hostname"`
@@ -23,6 +24,7 @@ type Core struct {
 	Domains  *CoreDomains `json:"domains"`
 }
 
+// CoreASN represents ASN data for the Core API.
 type CoreASN struct {
 	ASN    string `json:"asn"`
 	Name   string `json:"name"`
@@ -31,18 +33,21 @@ type CoreASN struct {
 	Type   string `json:"type"`
 }
 
+// CoreCompany represents company data for the Core API.
 type CoreCompany struct {
 	Name   string `json:"name"`
 	Domain string `json:"domain"`
 	Type   string `json:"type"`
 }
 
+// CoreCarrier represents carrier data for the Core API.
 type CoreCarrier struct {
 	Name string `json:"name"`
 	Mcc  string `json:"mcc"`
 	Mnc  string `json:"mnc"`
 }
 
+// CorePrivacy represents privacy data for the Core API.
 type CorePrivacy struct {
 	Vpn     bool `json:"vpn"`
 	Proxy   bool `json:"proxy"`
@@ -50,6 +55,7 @@ type CorePrivacy struct {
 	Hosting bool `json:"hosting"`
 }
 
+// CoreAbuse represents abuse data for the Core API.
 type CoreAbuse struct {
 	Address string `json:"address"`
 	Country string `json:"country"`
@@ -59,6 +65,7 @@ type CoreAbuse struct {
 	Phone   string `json:"phone"`
 }
 
+// CoreDomains represents domains data for the Core API.
 type CoreDomains struct {
 	IP      string   `json:"ip"`
 	Total   uint64   `json:"total"`
