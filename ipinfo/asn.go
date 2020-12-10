@@ -51,11 +51,34 @@ func (c *Client) GetASNDetails(asn string) (*ASNDetails, error) {
 	if !strings.HasPrefix(asn, "AS") {
 		return nil, &InvalidASNError{ASN: asn}
 	}
+
+	cacheKey := "asn:" + asn
+
+	// perform cache lookup.
+	if c.Cache != nil {
+		if res, err := c.Cache.Get(cacheKey); err == nil {
+			return res.(*ASNDetails), nil
+		}
+	}
+
+	// prepare req
 	req, err := c.NewRequest(asn + "/json")
 	if err != nil {
 		return nil, err
 	}
+
+	// do req
 	v := new(ASNDetails)
-	_, err = c.Do(req, v)
-	return v, err
+	if _, err := c.Do(req, v); err != nil {
+		return nil, err
+	}
+
+	// cache req result
+	if c.Cache != nil {
+		if err := c.Cache.Set(cacheKey, v); err != nil {
+			return v, err
+		}
+	}
+
+	return v, nil
 }

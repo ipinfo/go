@@ -2,7 +2,6 @@ package ipinfo
 
 import (
 	"net"
-	"net/http"
 )
 
 // Core represents data from the Core API.
@@ -79,19 +78,46 @@ func GetIPInfo(ip net.IP) (*Core, error) {
 
 // GetIPInfo returns the details for the specified IP.
 func (c *Client) GetIPInfo(ip net.IP) (*Core, error) {
-	var req *http.Request
-	var err error
+	var cacheKey string
+	var relUrl string
 
 	if ip == nil {
-		req, err = c.NewRequest("json")
+		// NOTE: we assume that if no IP is given, the user has the same IP as
+		// when a previous cache lookup happened, so if that result still
+		// exists, we return it. This is an issue if the user's IP changes.
+		cacheKey = "ip:nil"
+		relUrl = "json"
 	} else {
-		req, err = c.NewRequest(ip.String() + "/json")
+		ipStr := ip.String()
+		cacheKey = "ip:" + ipStr
+		relUrl = ipStr + "/json"
 	}
+
+	// perform cache lookup.
+	if c.Cache != nil {
+		if res, err := c.Cache.Get(cacheKey); err == nil {
+			return res.(*Core), nil
+		}
+	}
+
+	// prepare req
+	req, err := c.NewRequest(relUrl)
 	if err != nil {
 		return nil, err
 	}
 
+	// do req
 	v := new(Core)
-	_, err = c.Do(req, v)
-	return v, err
+	if _, err := c.Do(req, v); err != nil {
+		return nil, err
+	}
+
+	// cache req result
+	if c.Cache != nil {
+		if err := c.Cache.Set(cacheKey, v); err != nil {
+			return v, err
+		}
+	}
+
+	return v, nil
 }
