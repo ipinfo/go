@@ -79,18 +79,18 @@ func GetIPInfo(ip net.IP) (*Core, error) {
 // GetIPInfo returns the details for the specified IP.
 func (c *Client) GetIPInfo(ip net.IP) (*Core, error) {
 	var cacheKey string
-	var relUrl string
+	var relURL string
 
 	if ip == nil {
 		// NOTE: we assume that if no IP is given, the user has the same IP as
 		// when a previous cache lookup happened, so if that result still
 		// exists, we return it. This is an issue if the user's IP changes.
 		cacheKey = "ip:nil"
-		relUrl = "json"
+		relURL = "json"
 	} else {
 		ipStr := ip.String()
 		cacheKey = "ip:" + ipStr
-		relUrl = ipStr + "/json"
+		relURL = ipStr + "/json"
 	}
 
 	// perform cache lookup.
@@ -101,7 +101,7 @@ func (c *Client) GetIPInfo(ip net.IP) (*Core, error) {
 	}
 
 	// prepare req
-	req, err := c.NewRequest(relUrl)
+	req, err := c.NewRequest(relURL)
 	if err != nil {
 		return nil, err
 	}
