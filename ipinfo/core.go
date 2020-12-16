@@ -117,7 +117,8 @@ func (c *Client) GetIPInfo(ip net.IP) (*Core, error) {
 	// cache req result
 	if c.Cache != nil {
 		if err := c.Cache.Set(cacheKey, v); err != nil {
-			return nil, err
+			// NOTE: still return the value even if the cache fails.
+			return v, err
 		}
 	}
 
