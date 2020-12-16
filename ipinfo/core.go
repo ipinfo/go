@@ -42,13 +42,13 @@ type CoreCompany struct {
 // CoreCarrier represents carrier data for the Core API.
 type CoreCarrier struct {
 	Name string `json:"name"`
-	Mcc  string `json:"mcc"`
-	Mnc  string `json:"mnc"`
+	MCC  string `json:"mcc"`
+	MNC  string `json:"mnc"`
 }
 
 // CorePrivacy represents privacy data for the Core API.
 type CorePrivacy struct {
-	Vpn     bool `json:"vpn"`
+	VPN     bool `json:"vpn"`
 	Proxy   bool `json:"proxy"`
 	Tor     bool `json:"tor"`
 	Hosting bool `json:"hosting"`
@@ -80,12 +80,48 @@ func GetIPInfo(ip net.IP) (*Core, error) {
 
 // GetIPInfo returns the details for the specified IP.
 func (c *Client) GetIPInfo(ip net.IP) (*Core, error) {
-	v := new(Core)
-	res, err := c.getIPSpecific(ip, "json", v)
+	var cacheKey string
+	var relURL string
+
+	if ip == nil {
+		// NOTE: we assume that if no IP is given, the user has the same IP as
+		// when a previous cache lookup happened, so if that result still
+		// exists, we return it. This is an issue if the user's IP changes.
+		cacheKey = "ip:nil"
+		relURL = "json"
+	} else {
+		ipStr := ip.String()
+		cacheKey = "ip:" + ipStr
+		relURL = ipStr + "/json"
+	}
+
+	// perform cache lookup.
+	if c.Cache != nil {
+		if res, err := c.Cache.Get(cacheKey); err == nil {
+			return res.(*Core), nil
+		}
+	}
+
+	// prepare req
+	req, err := c.NewRequest(relURL)
 	if err != nil {
 		return nil, err
 	}
-	return res.(*Core), nil
+
+	// do req
+	v := new(Core)
+	if _, err := c.Do(req, v); err != nil {
+		return nil, err
+	}
+
+	// cache req result
+	if c.Cache != nil {
+		if err := c.Cache.Set(cacheKey, v); err != nil {
+			return nil, err
+		}
+	}
+
+	return v, nil
 }
 
 /* IP ADDRESS */
@@ -97,7 +133,11 @@ func GetIPAddr() (string, error) {
 
 // GetIPAddr returns the IP address that IPinfo sees when you make a request.
 func (c *Client) GetIPAddr() (string, error) {
-	return c.getIPSpecificStr(nil, "ip")
+	core, err := c.GetIPInfo(nil)
+	if err != nil {
+		return "", err
+	}
+	return core.IP.String(), nil
 }
 
 /* HOSTNAME */
@@ -109,7 +149,11 @@ func GetIPHostname(ip net.IP) (string, error) {
 
 // GetIPHostname returns the hostname of the domain on the specified IP.
 func (c *Client) GetIPHostname(ip net.IP) (string, error) {
-	return c.getIPSpecificStr(ip, "hostname")
+	core, err := c.GetIPInfo(ip)
+	if err != nil {
+		return "", err
+	}
+	return core.Hostname, nil
 }
 
 /* CITY */
@@ -121,7 +165,11 @@ func GetIPCity(ip net.IP) (string, error) {
 
 // GetIPCity returns the city for the specified IP.
 func (c *Client) GetIPCity(ip net.IP) (string, error) {
-	return c.getIPSpecificStr(ip, "city")
+	core, err := c.GetIPInfo(ip)
+	if err != nil {
+		return "", err
+	}
+	return core.City, nil
 }
 
 /* REGION */
@@ -133,7 +181,11 @@ func GetIPRegion(ip net.IP) (string, error) {
 
 // GetIPRegion returns the region for the specified IP.
 func (c *Client) GetIPRegion(ip net.IP) (string, error) {
-	return c.getIPSpecificStr(ip, "region")
+	core, err := c.GetIPInfo(ip)
+	if err != nil {
+		return "", err
+	}
+	return core.Region, nil
 }
 
 /* COUNTRY */
@@ -145,7 +197,11 @@ func GetIPCountry(ip net.IP) (string, error) {
 
 // GetIPCountry returns the country for the specified IP.
 func (c *Client) GetIPCountry(ip net.IP) (string, error) {
-	return c.getIPSpecificStr(ip, "country")
+	core, err := c.GetIPInfo(ip)
+	if err != nil {
+		return "", err
+	}
+	return core.Country, nil
 }
 
 /* LOCATION */
@@ -157,7 +213,11 @@ func GetIPLocation(ip net.IP) (string, error) {
 
 // GetIPLocation returns the location for the specified IP.
 func (c *Client) GetIPLocation(ip net.IP) (string, error) {
-	return c.getIPSpecificStr(ip, "loc")
+	core, err := c.GetIPInfo(ip)
+	if err != nil {
+		return "", err
+	}
+	return core.Location, nil
 }
 
 /* ORG */
@@ -169,7 +229,11 @@ func GetIPOrg(ip net.IP) (string, error) {
 
 // GetIPOrg returns the organization for the specified IP.
 func (c *Client) GetIPOrg(ip net.IP) (string, error) {
-	return c.getIPSpecificStr(ip, "org")
+	core, err := c.GetIPInfo(ip)
+	if err != nil {
+		return "", err
+	}
+	return core.Org, nil
 }
 
 /* POSTAL */
@@ -181,7 +245,11 @@ func GetIPPostal(ip net.IP) (string, error) {
 
 // GetIPPostal returns the postal for the specified IP.
 func (c *Client) GetIPPostal(ip net.IP) (string, error) {
-	return c.getIPSpecificStr(ip, "postal")
+	core, err := c.GetIPInfo(ip)
+	if err != nil {
+		return "", err
+	}
+	return core.Postal, nil
 }
 
 /* TIMEZONE */
@@ -193,62 +261,105 @@ func GetIPTimezone(ip net.IP) (string, error) {
 
 // GetIPTimezone returns the timezone for the specified IP.
 func (c *Client) GetIPTimezone(ip net.IP) (string, error) {
-	return c.getIPSpecificStr(ip, "timezone")
-}
-
-func (c *Client) getIPSpecificStr(ip net.IP, spec string) (string, error) {
-	v := new(string)
-	res, err := c.getIPSpecific(ip, spec, v)
+	core, err := c.GetIPInfo(ip)
 	if err != nil {
 		return "", err
 	}
-	return *(res.(*string)), nil
+	return core.Timezone, nil
 }
 
-func (c *Client) getIPSpecific(
-	ip net.IP,
-	spec string,
-	data interface{},
-) (interface{}, error) {
-	var cacheKey string
-	var relURL string
+/* ASN */
 
-	if ip == nil {
-		// NOTE: we assume that if no IP is given, the user has the same IP as
-		// when a previous cache lookup happened, so if that result still
-		// exists, we return it. This is an issue if the user's IP changes.
-		cacheKey = "ip:" + spec + ":nil"
-		relURL = spec
-	} else {
-		ipStr := ip.String()
-		cacheKey = "ip:" + spec + ":" + ipStr
-		relURL = ipStr + "/" + spec
-	}
+// GetIPASN returns the ASN details for the specified IP.
+func GetIPASN(ip net.IP) (*CoreASN, error) {
+	return DefaultClient.GetIPASN(ip)
+}
 
-	// perform cache lookup.
-	if c.Cache != nil {
-		if res, err := c.Cache.Get(cacheKey); err == nil {
-			return res, nil
-		}
-	}
-
-	// prepare req
-	req, err := c.NewRequest(relURL)
+// GetIPASN returns the ASN details for the specified IP.
+func (c *Client) GetIPASN(ip net.IP) (*CoreASN, error) {
+	core, err := c.GetIPInfo(ip)
 	if err != nil {
 		return nil, err
 	}
+	return core.ASN, nil
+}
 
-	// do req
-	if _, err := c.Do(req, data); err != nil {
+/* COMPANY */
+
+// GetIPCompany returns the company details for the specified IP.
+func GetIPCompany(ip net.IP) (*CoreCompany, error) {
+	return DefaultClient.GetIPCompany(ip)
+}
+
+// GetIPCompany returns the company details for the specified IP.
+func (c *Client) GetIPCompany(ip net.IP) (*CoreCompany, error) {
+	core, err := c.GetIPInfo(ip)
+	if err != nil {
 		return nil, err
 	}
+	return core.Company, nil
+}
 
-	// cache req result
-	if c.Cache != nil {
-		if err := c.Cache.Set(cacheKey, data); err != nil {
-			return nil, err
-		}
+/* CARRIER */
+
+// GetIPCarrier returns the carrier details for the specified IP.
+func GetIPCarrier(ip net.IP) (*CoreCarrier, error) {
+	return DefaultClient.GetIPCarrier(ip)
+}
+
+// GetIPCarrier returns the carrier details for the specified IP.
+func (c *Client) GetIPCarrier(ip net.IP) (*CoreCarrier, error) {
+	core, err := c.GetIPInfo(ip)
+	if err != nil {
+		return nil, err
 	}
+	return core.Carrier, nil
+}
 
-	return data, nil
+/* PRIVACY */
+
+// GetIPPrivacy returns the privacy details for the specified IP.
+func GetIPPrivacy(ip net.IP) (*CorePrivacy, error) {
+	return DefaultClient.GetIPPrivacy(ip)
+}
+
+// GetIPPrivacy returns the privacy details for the specified IP.
+func (c *Client) GetIPPrivacy(ip net.IP) (*CorePrivacy, error) {
+	core, err := c.GetIPInfo(ip)
+	if err != nil {
+		return nil, err
+	}
+	return core.Privacy, nil
+}
+
+/* ABUSE */
+
+// GetIPAbuse returns the abuse details for the specified IP.
+func GetIPAbuse(ip net.IP) (*CoreAbuse, error) {
+	return DefaultClient.GetIPAbuse(ip)
+}
+
+// GetIPAbuse returns the abuse details for the specified IP.
+func (c *Client) GetIPAbuse(ip net.IP) (*CoreAbuse, error) {
+	core, err := c.GetIPInfo(ip)
+	if err != nil {
+		return nil, err
+	}
+	return core.Abuse, nil
+}
+
+/* DOMAINS */
+
+// GetIPDomains returns the domains details for the specified IP.
+func GetIPDomains(ip net.IP) (*CoreDomains, error) {
+	return DefaultClient.GetIPDomains(ip)
+}
+
+// GetIPDomains returns the domains details for the specified IP.
+func (c *Client) GetIPDomains(ip net.IP) (*CoreDomains, error) {
+	core, err := c.GetIPInfo(ip)
+	if err != nil {
+		return nil, err
+	}
+	return core.Domains, nil
 }
