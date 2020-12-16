@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/ipinfo/go-ipinfo/ipinfo"
+	"github.com/ipinfo/go/ipinfo"
 )
 
 func main() {
-	info, err := ipinfo.GetIP(nil)
+	org, err := ipinfo.GetIPOrg(nil)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(info)
+	fmt.Printf("%v\n", org)
 }

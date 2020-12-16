@@ -1,29 +1,35 @@
-package ipinfo // import "github.com/ipinfo/go-ipinfo/ipinfo"
+package ipinfo
 
 import (
 	"strings"
 )
 
-// ASNInfo represents ASN details.
-type ASNInfo struct {
-	ASN         string      `json:"asn"`
-	Name        string      `json:"name"`
-	Country     string      `json:"country"`
-	Allocated   string      `json:"allocated"`
-	Registry    string      `json:"registry"`
-	Domain      string      `json:"domain"`
-	NumberOfIPs uint64      `json:"num_ips"`
-	Type        string      `json:"type"`
-	Prefixes    []ASNPrefix `json:"prefixes"`
-	Prefixes6   []ASNPrefix `json:"prefixes6"`
+// ASNDetails represents details for an ASN.
+type ASNDetails struct {
+	ASN         string             `json:"asn"`
+	Name        string             `json:"name"`
+	Country     string             `json:"country"`
+	Allocated   string             `json:"allocated"`
+	Registry    string             `json:"registry"`
+	Domain      string             `json:"domain"`
+	NumIPs      uint64             `json:"num_ips"`
+	Type        string             `json:"type"`
+	Prefixes    []ASNDetailsPrefix `json:"prefixes"`
+	Prefixes6   []ASNDetailsPrefix `json:"prefixes6"`
+	Peers       []string           `json:"peers"`
+	Upstreams   []string           `json:"upstreams"`
+	Downstreams []string           `json:"downstreams"`
 }
 
-// ASNPrefix represents an ASN prefix.
-type ASNPrefix struct {
+// ASNDetailsPrefix represents data for prefixes managed by an ASN.
+type ASNDetailsPrefix struct {
 	Netblock string `json:"netblock"`
 	ID       string `json:"id"`
 	Name     string `json:"name"`
 	Country  string `json:"country"`
+	Size     string `json:"size"`
+	Status   string `json:"status"`
+	Domain   string `json:"domain"`
 }
 
 // InvalidASNError is reported when the invalid ASN was specified.
@@ -35,21 +41,44 @@ func (err *InvalidASNError) Error() string {
 	return "invalid ASN: " + err.ASN
 }
 
-// ASN returns the details for the specified ASN.
-func ASN(asn string) (*ASNInfo, error) {
-	return c.ASN(asn)
+// GetASNDetails returns the details for the specified ASN.
+func GetASNDetails(asn string) (*ASNDetails, error) {
+	return DefaultClient.GetASNDetails(asn)
 }
 
-// ASN returns the details for the specified ASN.
-func (c *Client) ASN(asn string) (*ASNInfo, error) {
+// GetASNDetails returns the details for the specified ASN.
+func (c *Client) GetASNDetails(asn string) (*ASNDetails, error) {
 	if !strings.HasPrefix(asn, "AS") {
 		return nil, &InvalidASNError{ASN: asn}
 	}
+
+	cacheKey := "asn:" + asn
+
+	// perform cache lookup.
+	if c.Cache != nil {
+		if res, err := c.Cache.Get(cacheKey); err == nil {
+			return res.(*ASNDetails), nil
+		}
+	}
+
+	// prepare req
 	req, err := c.NewRequest(asn + "/json")
 	if err != nil {
 		return nil, err
 	}
-	v := new(ASNInfo)
-	_, err = c.Do(req, v)
-	return v, err
+
+	// do req
+	v := new(ASNDetails)
+	if _, err := c.Do(req, v); err != nil {
+		return nil, err
+	}
+
+	// cache req result
+	if c.Cache != nil {
+		if err := c.Cache.Set(cacheKey, v); err != nil {
+			return v, err
+		}
+	}
+
+	return v, nil
 }

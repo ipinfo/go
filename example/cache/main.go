@@ -5,21 +5,21 @@ import (
 	"log"
 	"net"
 
-	"github.com/ipinfo/go-ipinfo/ipinfo"
-	"github.com/ipinfo/go-ipinfo/ipinfo/cache"
+	"github.com/ipinfo/go/ipinfo"
+	"github.com/ipinfo/go/ipinfo/cache"
 )
 
-type DummyCacheEngine struct {
+type dummyCacheEngine struct {
 	cache map[string]interface{}
 }
 
-func NewDummyCacheEngine() *DummyCacheEngine {
-	return &DummyCacheEngine{
+func newDummyCacheEngine() *dummyCacheEngine {
+	return &dummyCacheEngine{
 		cache: make(map[string]interface{}),
 	}
 }
 
-func (c *DummyCacheEngine) Get(key string) (interface{}, error) {
+func (c *dummyCacheEngine) Get(key string) (interface{}, error) {
 	log.Printf("[CACHE]: Trying to get value for key %q", key)
 	if v, ok := c.cache[key]; ok {
 		log.Printf("[CACHE]: Got value for key %q=%q", key, v)
@@ -29,71 +29,24 @@ func (c *DummyCacheEngine) Get(key string) (interface{}, error) {
 	return nil, cache.ErrNotFound
 }
 
-func (c *DummyCacheEngine) Set(key string, value interface{}) error {
+func (c *dummyCacheEngine) Set(key string, value interface{}) error {
 	log.Printf("[CACHE]: Setting value for key %q=%q", key, value)
 	c.cache[key] = value
 	return nil
 }
 
-var DummyCache = ipinfo.NewCache(NewDummyCacheEngine())
+var dummyCache = ipinfo.NewCache(newDummyCacheEngine())
 
 func main() {
-	ipinfo.SetCache(DummyCache)
+	ipinfo.SetCache(dummyCache)
 	ip := net.ParseIP("8.8.8.8")
 
 	for i := 0; i < 2; i++ {
-		if v, err := ipinfo.GetIP(ip); err != nil {
+		fmt.Println([]string{"Actual requests", "From cache"}[i])
+		if v, err := ipinfo.GetIPInfo(ip); err != nil {
 			log.Println(err)
 		} else {
-			fmt.Println("IP:", v)
-		}
-
-		if v, err := ipinfo.GetHostname(ip); err != nil {
-			log.Println(err)
-		} else {
-			fmt.Println("Hostname:", v)
-		}
-
-		if v, err := ipinfo.GetOrganization(ip); err != nil {
-			log.Println(err)
-		} else {
-			fmt.Println("Organization:", v)
-		}
-
-		if v, err := ipinfo.GetCity(ip); err != nil {
-			log.Println(err)
-		} else {
-			fmt.Println("City:", v)
-		}
-
-		if v, err := ipinfo.GetRegion(ip); err != nil {
-			log.Println(err)
-		} else {
-			fmt.Println("Region:", v)
-		}
-
-		if v, err := ipinfo.GetCountry(ip); err != nil {
-			log.Println(err)
-		} else {
-			fmt.Println("Country:", v)
-		}
-
-		if v, err := ipinfo.GetLocation(ip); err != nil {
-			log.Println(err)
-		} else {
-			fmt.Println("Location:", v)
-		}
-
-		if v, err := ipinfo.GetPhone(ip); err != nil {
-			log.Println(err)
-		} else {
-			fmt.Println("Phone:", v)
-		}
-
-		if v, err := ipinfo.GetPostal(ip); err != nil {
-			log.Println(err)
-		} else {
-			fmt.Println("Postal:", v)
+			fmt.Printf("IP: %v\n", v)
 		}
 	}
 }

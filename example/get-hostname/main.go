@@ -8,9 +8,9 @@ import (
 )
 
 func main() {
-	core, err := ipinfo.GetIPInfo(nil)
+	hostname, err := ipinfo.GetIPHostname(nil)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("%v\n", core)
+	fmt.Printf("%v\n", hostname)
 }

@@ -1,7 +1,7 @@
 # [<img src="https://ipinfo.io/static/ipinfo-small.svg" alt="IPinfo" width="24"/>](https://ipinfo.io/) IPinfo Go Client Library
 
 [![License](http://img.shields.io/:license-apache-blue.svg)](LICENSE)
-[![GoDoc](https://godoc.org/github.com/ipinfo/go-ipinfo/ipinfo?status.svg)](https://godoc.org/github.com/ipinfo/go-ipinfo/ipinfo)
+[![GoDoc](https://godoc.org/github.com/ipinfo/go/ipinfo?status.svg)](https://godoc.org/github.com/ipinfo/go/ipinfo)
 
 This is the official Go client library for the [IPinfo.io](https://ipinfo.io) IP address API, allowing you to lookup your own IP address, or get any of the following details for other IP addresses:
 
@@ -21,7 +21,7 @@ The free plan is limited to 50,000 requests per month, and doesn't include some 
 #### Installation
 
 ```bash
-go get github.com/ipinfo/go-ipinfo/ipinfo
+go get github.com/ipinfo/go/ipinfo
 ```
 
 #### Quick Start
@@ -34,20 +34,17 @@ import (
 	"log"
 	"net"
 
-	"github.com/ipinfo/go-ipinfo/ipinfo"
+	"github.com/ipinfo/go/ipinfo"
 )
 
 func main() {
 	// Get access token by signing up a free account at https://ipinfo.io/signup
-	authTransport := ipinfo.AuthTransport{Token: "MY_TOKEN"}
-	httpClient := authTransport.Client()
-	client := ipinfo.NewClient(httpClient)
-	info, err := client.GetInfo(net.ParseIP("8.8.8.8"))
+	client := ipinfo.NewClient(nil, nil, "MY_TOKEN")
+	info, err := client.GetIPInfo(net.ParseIP("8.8.8.8"))
 	if err != nil {
 		log.Fatal(err)
 	}
 	fmt.Println(info)
-	// &{{8.8.8.8 Mountain View California US 37.3860,-122.0840 650 94035} google-public-dns-a.google.com }
 }
 ```
 
