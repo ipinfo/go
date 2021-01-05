@@ -6,21 +6,22 @@ import (
 
 // Core represents data from the Core API.
 type Core struct {
-	IP       net.IP       `json:"ip"`
-	Hostname string       `json:"hostname"`
-	City     string       `json:"city"`
-	Region   string       `json:"region"`
-	Country  string       `json:"country"`
-	Location string       `json:"loc"`
-	Org      string       `json:"org"`
-	Postal   string       `json:"postal"`
-	Timezone string       `json:"timezone"`
-	ASN      *CoreASN     `json:"asn"`
-	Company  *CoreCompany `json:"company"`
-	Carrier  *CoreCarrier `json:"carrier"`
-	Privacy  *CorePrivacy `json:"privacy"`
-	Abuse    *CoreAbuse   `json:"abuse"`
-	Domains  *CoreDomains `json:"domains"`
+	IP          net.IP       `json:"ip"`
+	Hostname    string       `json:"hostname"`
+	City        string       `json:"city"`
+	Region      string       `json:"region"`
+	Country     string       `json:"country"`
+	CountryName string       `json:'-"`
+	Location    string       `json:"loc"`
+	Org         string       `json:"org"`
+	Postal      string       `json:"postal"`
+	Timezone    string       `json:"timezone"`
+	ASN         *CoreASN     `json:"asn"`
+	Company     *CoreCompany `json:"company"`
+	Carrier     *CoreCarrier `json:"carrier"`
+	Privacy     *CorePrivacy `json:"privacy"`
+	Abuse       *CoreAbuse   `json:"abuse"`
+	Domains     *CoreDomains `json:"domains"`
 }
 
 // CoreASN represents ASN data for the Core API.
@@ -114,6 +115,11 @@ func (c *Client) GetIPInfo(ip net.IP) (*Core, error) {
 		return nil, err
 	}
 
+	// map country to full country name
+	if v.Country != "" {
+		v.CountryName = countriesMap[v.Country]
+	}
+
 	// cache req result
 	if c.Cache != nil {
 		if err := c.Cache.Set(cacheKey, v); err != nil {
@@ -203,6 +209,22 @@ func (c *Client) GetIPCountry(ip net.IP) (string, error) {
 		return "", err
 	}
 	return core.Country, nil
+}
+
+/* COUNTRY NAME */
+
+// GetIPCountryName returns the full country name for the specified IP.
+func GetIPCountryName(ip net.IP) (string, error) {
+	return DefaultClient.GetIPCountryName(ip)
+}
+
+// GetIPCountryName returns the full country name for the specified IP.
+func (c *Client) GetIPCountryName(ip net.IP) (string, error) {
+	core, err := c.GetIPInfo(ip)
+	if err != nil {
+		return "", err
+	}
+	return core.CountryName, nil
 }
 
 /* LOCATION */

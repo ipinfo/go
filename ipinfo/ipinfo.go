@@ -1,5 +1,3 @@
-//go:generate go run gen-fields.go
-
 package ipinfo
 
 // DefaultClient is the package-level client available to the user.
