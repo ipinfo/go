@@ -9,6 +9,7 @@ type ASNDetails struct {
 	ASN         string             `json:"asn"`
 	Name        string             `json:"name"`
 	Country     string             `json:"country"`
+	CountryName string             `json:"-"`
 	Allocated   string             `json:"allocated"`
 	Registry    string             `json:"registry"`
 	Domain      string             `json:"domain"`
@@ -71,6 +72,11 @@ func (c *Client) GetASNDetails(asn string) (*ASNDetails, error) {
 	v := new(ASNDetails)
 	if _, err := c.Do(req, v); err != nil {
 		return nil, err
+	}
+
+	// map country to full country name
+	if v.Country != "" {
+		v.CountryName = countriesMap[v.Country]
 	}
 
 	// cache req result
