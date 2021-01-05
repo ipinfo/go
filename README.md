@@ -1,7 +1,7 @@
 # [<img src="https://ipinfo.io/static/ipinfo-small.svg" alt="IPinfo" width="24"/>](https://ipinfo.io/) IPinfo Go Client Library
 
 [![License](http://img.shields.io/:license-apache-blue.svg)](LICENSE)
-[![GoDoc](https://godoc.org/github.com/ipinfo/go/ipinfo?status.svg)](https://godoc.org/github.com/ipinfo/go/ipinfo)
+[![Go Reference](https://pkg.go.dev/badge/github.com/ipinfo/go/v2/ipinfo.svg)](https://pkg.go.dev/github.com/ipinfo/go/v2/ipinfo)
 
 This is the official Go client library for the [IPinfo.io](https://ipinfo.io) IP address API, allowing you to lookup your own IP address, or get any of the following details for other IP addresses:
 
@@ -21,7 +21,7 @@ The free plan is limited to 50,000 requests per month, and doesn't include some 
 #### Installation
 
 ```bash
-go get github.com/ipinfo/go/ipinfo
+go get github.com/ipinfo/go/v2/ipinfo
 ```
 
 #### Quick Start
@@ -34,7 +34,7 @@ import (
 	"log"
 	"net"
 
-	"github.com/ipinfo/go/ipinfo"
+	"github.com/ipinfo/go/v2/ipinfo"
 )
 
 func main() {
