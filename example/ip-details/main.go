@@ -6,7 +6,7 @@ import (
 	"net"
 	"os"
 
-	"github.com/ipinfo/go/ipinfo"
+	"github.com/ipinfo/go/v2/ipinfo"
 )
 
 func main() {

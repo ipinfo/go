@@ -1,7 +1,7 @@
 package ipinfo
 
 import (
-	"github.com/ipinfo/go/ipinfo/cache"
+	"github.com/ipinfo/go/v2/ipinfo/cache"
 )
 
 // Cache represents the internal cache used by the IPinfo client.

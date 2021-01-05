@@ -1,3 +1,7 @@
+# 2.1.1
+
+- Fixed go module path to have "v2" at the end as necessary.
+
 # 2.1.0
 
 - A new field `CountryName` was added to both `ASNDetails` and `Core`, which
