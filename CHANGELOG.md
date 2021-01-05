@@ -2,7 +2,7 @@
 
 - A new field `CountryName` was added to both `ASNDetails` and `Core`, which
   is the full name of the country abbreviated in the existing `Country` field.
-  For example, if `Country == "PK"`, now `CountryName == "Pakistan'` exists.
+  For example, if `Country == "PK"`, now `CountryName == "Pakistan"` exists.
 
 # 2.0.0
 
