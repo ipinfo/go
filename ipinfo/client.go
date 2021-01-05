@@ -12,7 +12,7 @@ import (
 
 const (
 	defaultBaseURL   = "https://ipinfo.io/"
-	defaultUserAgent = "IPinfoClient/Go/2.0.0"
+	defaultUserAgent = "IPinfoClient/Go/2.1.0"
 )
 
 // A Client is the main handler to communicate with the IPinfo API.
