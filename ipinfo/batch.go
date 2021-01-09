@@ -8,7 +8,7 @@ import (
 type Batch map[net.IP]*Core
 
 // BatchReqOpts are options input into the `GetIPInfoBatch` functions.
-type BatchReqOpts {
+type BatchReqOpts struct {
 	// BatchSize is the internal batch size used per API request; the IPinfo
 	// API has a maximum batch size, but the GetIPInfoBatch functions available
 	// in this library do not. Therefore the library chunks the IP array
