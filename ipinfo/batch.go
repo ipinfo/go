@@ -4,16 +4,32 @@ import (
 	"net"
 )
 
-// Batch is a mapped result of IPs to their corresponding `Core` data.
-type Batch map[net.IP]*Core
+const (
+	BATCH_MAX_SIZE = 1000
+	BATCH_REQ_TIMEOUT_DEFAULT = 5
+)
 
-// BatchReqOpts are options input into the `GetIPInfoBatch` functions.
+// Batch is a mapped result of any valid API endpoint (e.g. `<ip>`,
+// `<ip>/<field>`, `<asn>`, etc) to its corresponding data.
+type Batch map[string]interface{}
+
+// BatchCore is a mapped result of IPs to their corresponding `Core` data.
+type BatchCore map[net.IP]*Core
+
+// BatchASNDetails is a mapped result of ASNs to their corresponding
+// `ASNDetails` data.
+type BatchASNDetails map[string]*ASNDetails
+
+// BatchReqOpts are options input into batch request functions.
 type BatchReqOpts struct {
 	// BatchSize is the internal batch size used per API request; the IPinfo
-	// API has a maximum batch size, but the GetIPInfoBatch functions available
+	// API has a maximum batch size, but the batch request functions available
 	// in this library do not. Therefore the library chunks the IP array
 	// internally into chunks of size `BatchSize`, clipping to the maximum
 	// allowed by the IPinfo API.
+	//
+	// 0 means to use the default batch size which is the max allowed by the
+	// IPinfo API.
 	BatchSize uint32
 
 	// TimeoutPerBatch is the timeout in seconds that each batch of size
@@ -24,17 +40,19 @@ type BatchReqOpts struct {
 	TimeoutPerBatch uint64
 
 	// TimeoutTotal is the total timeout in seconds for all batch requests in a
-	// `GetIPInfoBatch` function to complete.
+	// batch request function to complete.
 	//
 	// 0 means no total timeout; `TimeoutPerBatch` will still apply.
 	TimeoutTotal uint64
 }
 
+/* CORE */
+
 // GetIPInfoBatch does a batch request for all `ips` at once.
 func GetIPInfoBatch(
 	ips []net.IP,
 	opts BatchReqOpts,
-) (Batch, error) {
+) (BatchCore, error) {
 	return DefaultClient.GetIPInfoBatch(ips, opts)
 }
 
@@ -42,6 +60,24 @@ func GetIPInfoBatch(
 func (c *Client) GetIPInfoBatch(
 	ips []net.IP,
 	opts BatchReqOpts,
-) (Batch, error) {
+) (BatchCore, error) {
+
+}
+
+/* ASN */
+
+// GetASNDetailsBatch does a batch request for all `asns` at once.
+func GetASNDetailsBatch(
+	asns []string,
+	opts BatchReqOpts,
+) (BatchASNDetails, error) {
+	return DefaultClient.GetASNDetailsBatch(asns, opts)
+}
+
+// GetASNDetailsBatch does a batch request for all `asns` at once.
+func (c *Client) GetASNDetailsBatch(
+	asns []string,
+	opts BatchReqOpts,
+) (BatchASNDetails, error) {
 
 }
