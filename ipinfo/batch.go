@@ -50,6 +50,24 @@ type BatchReqOpts struct {
 	Filter bool
 }
 
+/* GENERIC */
+
+// GetBatch does a batch request for all `urls` at once.
+func GetBatch(
+	urls []string,
+	opts BatchReqOpts,
+) (Batch, error) {
+	return DefaultClient.GetBatch(urls, opts)
+}
+
+// GetBatch does a batch request for all `urls` at once.
+func (c *Client) GetBatch(
+	urls []string,
+	opts BatchReqOpts,
+) (Batch, error) {
+	// TODO
+}
+
 /* CORE */
 
 // GetIPInfoBatch does a batch request for all `ips` at once.
@@ -65,7 +83,9 @@ func (c *Client) GetIPInfoBatch(
 	ips []net.IP,
 	opts BatchReqOpts,
 ) (BatchCore, error) {
-
+	// TODO
+	// wrapper over c.GetBatch; convert `ips` to string array, then pass it in,
+	// and create a new map which is BatchCore.
 }
 
 /* ASN */
@@ -83,5 +103,7 @@ func (c *Client) GetASNDetailsBatch(
 	asns []string,
 	opts BatchReqOpts,
 ) (BatchASNDetails, error) {
-
+	// TODO
+	// wrapper over c.GetBatch; check that `asns` are all ASNs, then pass it
+	// in, and create a new map which is BatchASNDetails.
 }
