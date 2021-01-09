@@ -5,8 +5,8 @@ import (
 )
 
 const (
-	BATCH_MAX_SIZE = 1000
-	BATCH_REQ_TIMEOUT_DEFAULT = 5
+	batchMaxSize           = 1000
+	batchReqTimeoutDefault = 5
 )
 
 // Batch is a mapped result of any valid API endpoint (e.g. `<ip>`,
@@ -44,6 +44,10 @@ type BatchReqOpts struct {
 	//
 	// 0 means no total timeout; `TimeoutPerBatch` will still apply.
 	TimeoutTotal uint64
+
+	// Filter, if turned on, will filter out a URL whose value was deemed empty
+	// on the server.
+	Filter bool
 }
 
 /* CORE */
