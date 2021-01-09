@@ -24,7 +24,7 @@ type BatchASNDetails map[string]*ASNDetails
 type BatchReqOpts struct {
 	// BatchSize is the internal batch size used per API request; the IPinfo
 	// API has a maximum batch size, but the batch request functions available
-	// in this library do not. Therefore the library chunks the IP array
+	// in this library do not. Therefore the library chunks the input slices
 	// internally into chunks of size `BatchSize`, clipping to the maximum
 	// allowed by the IPinfo API.
 	//
