@@ -66,7 +66,11 @@ func (c *Client) GetBatch(
 	urls []string,
 	opts BatchReqOpts,
 ) (Batch, error) {
-	var batchSize
+	var batchSize uint32
+	var lookupUrls []string
+	var result Batch
+	var wg sync.WaitGroup
+	var mu sync.Mutex
 
 	// use correct batch size; default/clip to `batchMaxSize`.
 	if opts.BatchSize == 0 || opts.BatchSize > batchMaxSize {
@@ -74,6 +78,58 @@ func (c *Client) GetBatch(
 	} else {
 		batchSize = opts.BatchSize
 	}
+
+	// if the cache is available, filter out URLs already cached.
+	result = make(Batch, len(urls))
+	if c.Cache != nil {
+		lookupUrls = make([]string, 0, len(urls)/2)
+		for url := range urls {
+			if res, err := c.Cache.Get(url); err == nil {
+				result[url] = res
+			} else {
+				append(lookupUrls, url)
+			}
+		}
+	} else {
+		lookupUrls = urls
+	}
+
+	// everything cached.
+	if len(lookupUrls) == 0 {
+		return result
+	}
+
+	// prepare req.
+	req, err := c.newRequest("POST", "batch")
+	if err != nil {
+		return nil, err
+	}
+
+	// lookup URLs will be sent as a JSON array.
+	req.Header.Set("Accept", "application/json")
+
+	for i := 0; i < len(lookupUrls); i += batchSize {
+		end := i + batchSize
+		if end > len(lookupUrls) {
+			end = len(lookupUrls)
+		}
+
+		wg.Add(1)
+		go func(urlsChunk []string) {
+			defer wg.Done()
+
+			// TODO
+			// 1. do request
+			// 2. get resp
+			// 3. lock `mu`
+			// 4. update map in bulk
+			// 5. unlock `mu`
+			// 6. update cache in bulk; no lock needed as it's concurrency-safe
+		}(lookupUrls[i:end])
+	}
+	wg.Wait()
+
+	return result
 }
 
 /* CORE */

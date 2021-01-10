@@ -81,14 +81,14 @@ func GetIPInfo(ip net.IP) (*Core, error) {
 
 // GetIPInfo returns the details for the specified IP.
 func (c *Client) GetIPInfo(ip net.IP) (*Core, error) {
-	relUrl := ""
+	relURL := ""
 	if ip != nil {
 		relURL = ip.String()
 	}
 
 	// perform cache lookup.
 	if c.Cache != nil {
-		if res, err := c.Cache.Get(relUrl); err == nil {
+		if res, err := c.Cache.Get(relURL); err == nil {
 			return res.(*Core), nil
 		}
 	}
@@ -112,7 +112,7 @@ func (c *Client) GetIPInfo(ip net.IP) (*Core, error) {
 
 	// cache req result
 	if c.Cache != nil {
-		if err := c.Cache.Set(relUrl, v); err != nil {
+		if err := c.Cache.Set(relURL, v); err != nil {
 			// NOTE: still return the value even if the cache fails.
 			return v, err
 		}
