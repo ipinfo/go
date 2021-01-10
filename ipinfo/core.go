@@ -104,14 +104,14 @@ func (c *Client) GetIPInfo(ip net.IP) (*Core, error) {
 	}
 
 	// prepare req
-	req, err := c.NewRequest(relURL)
+	req, err := c.newRequest("GET", relURL)
 	if err != nil {
 		return nil, err
 	}
 
 	// do req
 	v := new(Core)
-	if _, err := c.Do(req, v); err != nil {
+	if _, err := c.do(req, v); err != nil {
 		return nil, err
 	}
 

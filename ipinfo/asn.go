@@ -63,14 +63,14 @@ func (c *Client) GetASNDetails(asn string) (*ASNDetails, error) {
 	}
 
 	// prepare req
-	req, err := c.NewRequest(asn + "/json")
+	req, err := c.newRequest("GET", asn+"/json")
 	if err != nil {
 		return nil, err
 	}
 
 	// do req
 	v := new(ASNDetails)
-	if _, err := c.Do(req, v); err != nil {
+	if _, err := c.do(req, v); err != nil {
 		return nil, err
 	}
 

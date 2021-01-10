@@ -1,3 +1,12 @@
+# 2.2.0
+
+- The following functions are now private:
+    - `Client.Do`
+    - `Client.NewRequest`
+    - `CheckResponse`
+
+TODO
+
 # 2.1.1
 
 - Fixed go module path to have "v2" at the end as necessary.
