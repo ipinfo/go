@@ -53,17 +53,15 @@ func (c *Client) GetASNDetails(asn string) (*ASNDetails, error) {
 		return nil, &InvalidASNError{ASN: asn}
 	}
 
-	cacheKey := "asn:" + asn
-
 	// perform cache lookup.
 	if c.Cache != nil {
-		if res, err := c.Cache.Get(cacheKey); err == nil {
+		if res, err := c.Cache.Get(asn); err == nil {
 			return res.(*ASNDetails), nil
 		}
 	}
 
 	// prepare req
-	req, err := c.newRequest("GET", asn+"/json")
+	req, err := c.newRequest("GET", asn)
 	if err != nil {
 		return nil, err
 	}
@@ -81,7 +79,7 @@ func (c *Client) GetASNDetails(asn string) (*ASNDetails, error) {
 
 	// cache req result
 	if c.Cache != nil {
-		if err := c.Cache.Set(cacheKey, v); err != nil {
+		if err := c.Cache.Set(asn, v); err != nil {
 			return v, err
 		}
 	}

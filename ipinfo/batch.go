@@ -2,6 +2,7 @@ package ipinfo
 
 import (
 	"net"
+	"sync"
 )
 
 const (
@@ -35,9 +36,9 @@ type BatchReqOpts struct {
 	// TimeoutPerBatch is the timeout in seconds that each batch of size
 	// `BatchSize` will have for its own request.
 	//
-	// 0 means no timeout at all per batch request; this does _not_ override
-	// the value of `TimeoutTotal` if that is non-0.
-	TimeoutPerBatch uint64
+	// 0 means to use a default of 5 seconds; any negative number will turn it
+	// off; turning it off does _not_ disable the effects of `TimeoutTotal`.
+	TimeoutPerBatch int64
 
 	// TimeoutTotal is the total timeout in seconds for all batch requests in a
 	// batch request function to complete.
@@ -65,7 +66,14 @@ func (c *Client) GetBatch(
 	urls []string,
 	opts BatchReqOpts,
 ) (Batch, error) {
-	// TODO
+	var batchSize
+
+	// use correct batch size; default/clip to `batchMaxSize`.
+	if opts.BatchSize == 0 || opts.BatchSize > batchMaxSize {
+		batchSize = batchMaxSize
+	} else {
+		batchSize = opts.BatchSize
+	}
 }
 
 /* CORE */

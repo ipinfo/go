@@ -81,24 +81,14 @@ func GetIPInfo(ip net.IP) (*Core, error) {
 
 // GetIPInfo returns the details for the specified IP.
 func (c *Client) GetIPInfo(ip net.IP) (*Core, error) {
-	var cacheKey string
-	var relURL string
-
-	if ip == nil {
-		// NOTE: we assume that if no IP is given, the user has the same IP as
-		// when a previous cache lookup happened, so if that result still
-		// exists, we return it. This is an issue if the user's IP changes.
-		cacheKey = "ip:nil"
-		relURL = "json"
-	} else {
-		ipStr := ip.String()
-		cacheKey = "ip:" + ipStr
-		relURL = ipStr + "/json"
+	relUrl := ""
+	if ip != nil {
+		relURL = ip.String()
 	}
 
 	// perform cache lookup.
 	if c.Cache != nil {
-		if res, err := c.Cache.Get(cacheKey); err == nil {
+		if res, err := c.Cache.Get(relUrl); err == nil {
 			return res.(*Core), nil
 		}
 	}
@@ -122,7 +112,7 @@ func (c *Client) GetIPInfo(ip net.IP) (*Core, error) {
 
 	// cache req result
 	if c.Cache != nil {
-		if err := c.Cache.Set(cacheKey, v); err != nil {
+		if err := c.Cache.Set(relUrl, v); err != nil {
 			// NOTE: still return the value even if the cache fails.
 			return v, err
 		}
