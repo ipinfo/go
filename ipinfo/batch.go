@@ -144,17 +144,16 @@ func (c *Client) GetBatch(
 			)
 			defer cancel()
 
-			jsonArrStr, err := json.Marshal(urlsChunk)
-			if err != nil {
-				return
-			}
-
 			if opts.Filter {
 				postURL = "batch?filter=1"
 			} else {
 				postURL = "batch"
 			}
 
+			jsonArrStr, err := json.Marshal(urlsChunk)
+			if err != nil {
+				return
+			}
 			jsonBuf := bytes.NewBuffer(jsonArrStr)
 
 			req, err := c.newRequest(ctx, "POST", postURL, jsonBuf)
