@@ -72,6 +72,14 @@ type CoreDomains struct {
 	Domains []string `json:"domains"`
 }
 
+// Set `v.CountryName` properly by mapping country abbreviation to full country
+// name.
+func (v *Core) setCountryName() {
+	if v.Country != "" {
+		v.CountryName = countriesMap[v.Country]
+	}
+}
+
 /* CORE */
 
 // GetIPInfo returns the details for the specified IP.
@@ -94,7 +102,7 @@ func (c *Client) GetIPInfo(ip net.IP) (*Core, error) {
 	}
 
 	// prepare req
-	req, err := c.newRequest("GET", relURL)
+	req, err := c.newRequest(nil, "GET", relURL, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -105,10 +113,8 @@ func (c *Client) GetIPInfo(ip net.IP) (*Core, error) {
 		return nil, err
 	}
 
-	// map country to full country name
-	if v.Country != "" {
-		v.CountryName = countriesMap[v.Country]
-	}
+	// format
+	v.setCountryName()
 
 	// cache req result
 	if c.Cache != nil {

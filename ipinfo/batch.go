@@ -1,8 +1,14 @@
 package ipinfo
 
 import (
+	"bytes"
+	"context"
+	"encoding/json"
+	"fmt"
 	"net"
+	"strings"
 	"sync"
+	"time"
 )
 
 const (
@@ -10,12 +16,22 @@ const (
 	batchReqTimeoutDefault = 5
 )
 
+// Internal batch type used by common batch functionality to temporarily store
+// the URL-to-result mapping in a half-decoded state (specifically the value
+// not being decoded yet). This allows us to decode the value to a proper
+// concrete type like `Core` or `ASNDetails` after analyzing the key to
+// determine which one it should be.
+type batch map[string]json.RawMessage
+
 // Batch is a mapped result of any valid API endpoint (e.g. `<ip>`,
 // `<ip>/<field>`, `<asn>`, etc) to its corresponding data.
+//
+// The corresponding value will be either `*Core`, `*ASNDetails` or a generic
+// map for unknown value results.
 type Batch map[string]interface{}
 
 // BatchCore is a mapped result of IPs to their corresponding `Core` data.
-type BatchCore map[net.IP]*Core
+type BatchCore map[string]*Core
 
 // BatchASNDetails is a mapped result of ASNs to their corresponding
 // `ASNDetails` data.
@@ -66,7 +82,7 @@ func (c *Client) GetBatch(
 	urls []string,
 	opts BatchReqOpts,
 ) (Batch, error) {
-	var batchSize uint32
+	var batchSize int
 	var lookupUrls []string
 	var result Batch
 	var wg sync.WaitGroup
@@ -76,18 +92,18 @@ func (c *Client) GetBatch(
 	if opts.BatchSize == 0 || opts.BatchSize > batchMaxSize {
 		batchSize = batchMaxSize
 	} else {
-		batchSize = opts.BatchSize
+		batchSize = int(opts.BatchSize)
 	}
 
 	// if the cache is available, filter out URLs already cached.
 	result = make(Batch, len(urls))
 	if c.Cache != nil {
 		lookupUrls = make([]string, 0, len(urls)/2)
-		for url := range urls {
+		for _, url := range urls {
 			if res, err := c.Cache.Get(url); err == nil {
 				result[url] = res
 			} else {
-				append(lookupUrls, url)
+				lookupUrls = append(lookupUrls, url)
 			}
 		}
 	} else {
@@ -95,18 +111,10 @@ func (c *Client) GetBatch(
 	}
 
 	// everything cached.
+	fmt.Printf("lookupUrls=%v\n", lookupUrls)
 	if len(lookupUrls) == 0 {
-		return result
+		return result, nil
 	}
-
-	// prepare req.
-	req, err := c.newRequest("POST", "batch")
-	if err != nil {
-		return nil, err
-	}
-
-	// lookup URLs will be sent as a JSON array.
-	req.Header.Set("Accept", "application/json")
 
 	for i := 0; i < len(lookupUrls); i += batchSize {
 		end := i + batchSize
@@ -116,20 +124,107 @@ func (c *Client) GetBatch(
 
 		wg.Add(1)
 		go func(urlsChunk []string) {
+			var postURL string
+			var timeoutPerBatch int64
+
 			defer wg.Done()
 
-			// TODO
-			// 1. do request
-			// 2. get resp
-			// 3. lock `mu`
-			// 4. update map in bulk
-			// 5. unlock `mu`
-			// 6. update cache in bulk; no lock needed as it's concurrency-safe
+			// TODO manage errors and timeouts properly.
+			// TODO total timeout.
+
+			if opts.TimeoutPerBatch == 0 {
+				timeoutPerBatch = batchReqTimeoutDefault
+			} else {
+				timeoutPerBatch = opts.TimeoutPerBatch
+			}
+
+			// prepare request.
+
+			ctx, cancel := context.WithTimeout(
+				context.Background(),
+				time.Duration(timeoutPerBatch)*time.Second,
+			)
+			defer cancel()
+
+			jsonArrStr, err := json.Marshal(urlsChunk)
+			if err != nil {
+				return
+			}
+
+			if opts.Filter {
+				postURL = "batch?filter=1"
+			} else {
+				postURL = "batch"
+			}
+
+			jsonBuf := bytes.NewBuffer(jsonArrStr)
+
+			req, err := c.newRequest(ctx, "POST", postURL, jsonBuf)
+			if err != nil {
+				return
+			}
+			req.Header.Set("Content-Type", "application/json")
+
+			// temporarily make a new local result map so that we can read the
+			// network data into it; once we have it local we'll merge it with
+			// `result` in a concurrency-safe way.
+			localResult := new(batch)
+			if _, err := c.do(req, localResult); err != nil {
+				return
+			}
+
+			// update final result.
+			mu.Lock()
+			for k, v := range *localResult {
+				if strings.HasPrefix(k, "AS") {
+					decodedV := new(ASNDetails)
+					if err := json.Unmarshal(v, decodedV); err != nil {
+						return
+					}
+
+					decodedV.setCountryName()
+					result[k] = decodedV
+				} else if net.ParseIP(k) != nil {
+					decodedV := new(Core)
+					if err := json.Unmarshal(v, decodedV); err != nil {
+						fmt.Printf("%v\n", err)
+						return
+					}
+
+					decodedV.setCountryName()
+					result[k] = decodedV
+				} else {
+					decodedV := new(interface{})
+					if err := json.Unmarshal(v, decodedV); err != nil {
+						return
+					}
+
+					result[k] = decodedV
+				}
+			}
+			mu.Unlock()
 		}(lookupUrls[i:end])
+
 	}
 	wg.Wait()
 
-	return result
+	// we delay inserting into the cache until now because:
+	// 1. it's likely more cache-line friendly.
+	// 2. doing it while updating `result` inside the request workers would be
+	//    problematic if the cache is external since we take a mutex lock for
+	//    that entire period.
+	if c.Cache != nil {
+		for _, url := range lookupUrls {
+			if v, exists := result[url]; exists {
+				if err := c.Cache.Set(url, v); err != nil {
+					// NOTE: still return the result even if the cache fails.
+					return result, err
+				}
+			}
+		}
+	}
+
+	return result, nil
 }
 
 /* CORE */
@@ -150,6 +245,7 @@ func (c *Client) GetIPInfoBatch(
 	// TODO
 	// wrapper over c.GetBatch; convert `ips` to string array, then pass it in,
 	// and create a new map which is BatchCore.
+	return nil, nil
 }
 
 /* ASN */
@@ -170,4 +266,5 @@ func (c *Client) GetASNDetailsBatch(
 	// TODO
 	// wrapper over c.GetBatch; check that `asns` are all ASNs, then pass it
 	// in, and create a new map which is BatchASNDetails.
+	return nil, nil
 }

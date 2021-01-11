@@ -42,6 +42,14 @@ func (err *InvalidASNError) Error() string {
 	return "invalid ASN: " + err.ASN
 }
 
+// Set `v.CountryName` properly by mapping country abbreviation to full country
+// name.
+func (v *ASNDetails) setCountryName() {
+	if v.Country != "" {
+		v.CountryName = countriesMap[v.Country]
+	}
+}
+
 // GetASNDetails returns the details for the specified ASN.
 func GetASNDetails(asn string) (*ASNDetails, error) {
 	return DefaultClient.GetASNDetails(asn)
@@ -61,7 +69,7 @@ func (c *Client) GetASNDetails(asn string) (*ASNDetails, error) {
 	}
 
 	// prepare req
-	req, err := c.newRequest("GET", asn)
+	req, err := c.newRequest(nil, "GET", asn, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -72,10 +80,8 @@ func (c *Client) GetASNDetails(asn string) (*ASNDetails, error) {
 		return nil, err
 	}
 
-	// map country to full country name
-	if v.Country != "" {
-		v.CountryName = countriesMap[v.Country]
-	}
+	// format
+	v.setCountryName()
 
 	// cache req result
 	if c.Cache != nil {

@@ -1,6 +1,7 @@
 package ipinfo
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -67,9 +68,15 @@ func NewClient(
 // urlStr, in which case it is resolved relative to the BaseURL of the Client.
 // Relative URLs should always be specified without a preceding slash.
 func (c *Client) newRequest(
+	ctx context.Context,
 	method string,
 	urlStr string,
+	body io.Reader,
 ) (*http.Request, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
 	u := new(url.URL)
 
 	// get final URL path.
@@ -84,7 +91,7 @@ func (c *Client) newRequest(
 	}
 
 	// get `http` package request object.
-	req, err := http.NewRequest(method, u.String(), nil)
+	req, err := http.NewRequestWithContext(ctx, method, u.String(), body)
 	if err != nil {
 		return nil, err
 	}
