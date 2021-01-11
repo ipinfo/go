@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"fmt"
 	"net"
 	"strings"
 	"sync"
@@ -111,7 +110,6 @@ func (c *Client) GetBatch(
 	}
 
 	// everything cached.
-	fmt.Printf("lookupUrls=%v\n", lookupUrls)
 	if len(lookupUrls) == 0 {
 		return result, nil
 	}
@@ -187,7 +185,6 @@ func (c *Client) GetBatch(
 				} else if net.ParseIP(k) != nil {
 					decodedV := new(Core)
 					if err := json.Unmarshal(v, decodedV); err != nil {
-						fmt.Printf("%v\n", err)
 						return
 					}
 
