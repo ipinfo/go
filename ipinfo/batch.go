@@ -172,6 +172,7 @@ func (c *Client) GetBatch(
 
 			// update final result.
 			mu.Lock()
+			defer mu.Unlock()
 			for k, v := range *localResult {
 				if strings.HasPrefix(k, "AS") {
 					decodedV := new(ASNDetails)
@@ -198,7 +199,6 @@ func (c *Client) GetBatch(
 					result[k] = decodedV
 				}
 			}
-			mu.Unlock()
 		}(lookupUrls[i:end])
 
 	}
