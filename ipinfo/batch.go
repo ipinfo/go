@@ -8,6 +8,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"golang.org/x/sync/errgroup"
 )
 
 const (
@@ -82,17 +84,12 @@ func (c *Client) GetBatch(
 	opts BatchReqOpts,
 ) (Batch, error) {
 	var batchSize int
+	var timeoutPerBatch int64
+	var totalTimeoutCtx context.Context
+	var totalTimeoutCancel context.CancelFunc
 	var lookupUrls []string
 	var result Batch
-	var wg sync.WaitGroup
 	var mu sync.Mutex
-
-	// use correct batch size; default/clip to `batchMaxSize`.
-	if opts.BatchSize == 0 || opts.BatchSize > batchMaxSize {
-		batchSize = batchMaxSize
-	} else {
-		batchSize = int(opts.BatchSize)
-	}
 
 	// if the cache is available, filter out URLs already cached.
 	result = make(Batch, len(urls))
@@ -109,37 +106,51 @@ func (c *Client) GetBatch(
 		lookupUrls = urls
 	}
 
-	// everything cached.
+	// everything cached; exit early.
 	if len(lookupUrls) == 0 {
 		return result, nil
 	}
 
+	// use correct batch size; default/clip to `batchMaxSize`.
+	if opts.BatchSize == 0 || opts.BatchSize > batchMaxSize {
+		batchSize = batchMaxSize
+	} else {
+		batchSize = int(opts.BatchSize)
+	}
+
+	// use correct timeout per batch; either default or user-provided.
+	if opts.TimeoutPerBatch == 0 {
+		timeoutPerBatch = batchReqTimeoutDefault
+	} else {
+		timeoutPerBatch = opts.TimeoutPerBatch
+	}
+
+	// use correct timeout total; either ignore it or apply user-provided.
+	if opts.TimeoutTotal > 0 {
+		totalTimeoutCtx, totalTimeoutCancel = context.WithTimeout(
+			context.Background(),
+			time.Duration(opts.TimeoutTotal)*time.Second,
+		)
+		defer totalTimeoutCancel()
+	} else {
+		totalTimeoutCtx = context.Background()
+	}
+
+	errg, ctx := errgroup.WithContext(totalTimeoutCtx)
 	for i := 0; i < len(lookupUrls); i += batchSize {
 		end := i + batchSize
 		if end > len(lookupUrls) {
 			end = len(lookupUrls)
 		}
 
-		wg.Add(1)
-		go func(urlsChunk []string) {
+		urlsChunk := lookupUrls[i:end]
+		errg.Go(func() error {
 			var postURL string
-			var timeoutPerBatch int64
-
-			defer wg.Done()
-
-			// TODO manage errors and timeouts properly.
-			// TODO total timeout.
-
-			if opts.TimeoutPerBatch == 0 {
-				timeoutPerBatch = batchReqTimeoutDefault
-			} else {
-				timeoutPerBatch = opts.TimeoutPerBatch
-			}
 
 			// prepare request.
 
 			ctx, cancel := context.WithTimeout(
-				context.Background(),
+				ctx,
 				time.Duration(timeoutPerBatch)*time.Second,
 			)
 			defer cancel()
@@ -152,13 +163,13 @@ func (c *Client) GetBatch(
 
 			jsonArrStr, err := json.Marshal(urlsChunk)
 			if err != nil {
-				return
+				return err
 			}
 			jsonBuf := bytes.NewBuffer(jsonArrStr)
 
 			req, err := c.newRequest(ctx, "POST", postURL, jsonBuf)
 			if err != nil {
-				return
+				return err
 			}
 			req.Header.Set("Content-Type", "application/json")
 
@@ -167,7 +178,7 @@ func (c *Client) GetBatch(
 			// `result` in a concurrency-safe way.
 			localResult := new(batch)
 			if _, err := c.do(req, localResult); err != nil {
-				return
+				return err
 			}
 
 			// update final result.
@@ -177,7 +188,7 @@ func (c *Client) GetBatch(
 				if strings.HasPrefix(k, "AS") {
 					decodedV := new(ASNDetails)
 					if err := json.Unmarshal(v, decodedV); err != nil {
-						return
+						return err
 					}
 
 					decodedV.setCountryName()
@@ -185,7 +196,7 @@ func (c *Client) GetBatch(
 				} else if net.ParseIP(k) != nil {
 					decodedV := new(Core)
 					if err := json.Unmarshal(v, decodedV); err != nil {
-						return
+						return err
 					}
 
 					decodedV.setCountryName()
@@ -193,16 +204,19 @@ func (c *Client) GetBatch(
 				} else {
 					decodedV := new(interface{})
 					if err := json.Unmarshal(v, decodedV); err != nil {
-						return
+						return err
 					}
 
 					result[k] = decodedV
 				}
 			}
-		}(lookupUrls[i:end])
 
+			return nil
+		})
 	}
-	wg.Wait()
+	if err := errg.Wait(); err != nil {
+		return result, err
+	}
 
 	// we delay inserting into the cache until now because:
 	// 1. it's likely more cache-line friendly.

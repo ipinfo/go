@@ -25,7 +25,10 @@ func main() {
 				"8.8.8.8",
 				"8.8.8.8/country",
 			},
-			ipinfo.BatchReqOpts{},
+			ipinfo.BatchReqOpts{
+				TimeoutPerBatch: 0,
+				TimeoutTotal:    5,
+			},
 		)
 		if err != nil {
 			log.Fatal(err)
