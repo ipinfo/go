@@ -18,13 +18,10 @@ func main() {
 	)
 	for i := 0; i < 3; i++ {
 		fmt.Printf("doing lookup #%v\n", i)
-		batchResult, err := client.GetBatch(
+		batchResult, err := client.GetIPStrInfoBatch(
 			[]string{
 				"1.1.1.1",
-				"1.1.1.1/country",
 				"8.8.8.8",
-				"8.8.8.8/country",
-				"AS321",
 			},
 			ipinfo.BatchReqOpts{
 				TimeoutPerBatch: 0,

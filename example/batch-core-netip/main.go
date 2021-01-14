@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"net"
 	"os"
 	"time"
 
@@ -18,13 +19,10 @@ func main() {
 	)
 	for i := 0; i < 3; i++ {
 		fmt.Printf("doing lookup #%v\n", i)
-		batchResult, err := client.GetBatch(
-			[]string{
-				"1.1.1.1",
-				"1.1.1.1/country",
-				"8.8.8.8",
-				"8.8.8.8/country",
-				"AS321",
+		batchResult, err := client.GetIPInfoBatch(
+			[]net.IP{
+				net.ParseIP("1.1.1.1"),
+				net.ParseIP("8.8.8.8"),
 			},
 			ipinfo.BatchReqOpts{
 				TimeoutPerBatch: 0,

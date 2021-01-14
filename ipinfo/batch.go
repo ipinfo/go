@@ -237,7 +237,7 @@ func (c *Client) GetBatch(
 	return result, nil
 }
 
-/* CORE */
+/* CORE (net.IP) */
 
 // GetIPInfoBatch does a batch request for all `ips` at once.
 func GetIPInfoBatch(
@@ -252,10 +252,41 @@ func (c *Client) GetIPInfoBatch(
 	ips []net.IP,
 	opts BatchReqOpts,
 ) (BatchCore, error) {
-	// TODO
-	// wrapper over c.GetBatch; convert `ips` to string array, then pass it in,
-	// and create a new map which is BatchCore.
-	return nil, nil
+	ipstrs := make([]string, 0, len(ips))
+	for _, ip := range ips {
+		ipstrs = append(ipstrs, ip.String())
+	}
+
+	return c.GetIPStrInfoBatch(ipstrs, opts)
+}
+
+/* CORE (string) */
+
+// GetIPStrInfoBatch does a batch request for all `ips` at once.
+func GetIPStrInfoBatch(
+	ips []string,
+	opts BatchReqOpts,
+) (BatchCore, error) {
+	return DefaultClient.GetIPStrInfoBatch(ips, opts)
+}
+
+// GetIPStrInfoBatch does a batch request for all `ips` at once.
+func (c *Client) GetIPStrInfoBatch(
+	ips []string,
+	opts BatchReqOpts,
+) (BatchCore, error) {
+	intermediateRes, err := c.GetBatch(ips, opts)
+	if err != nil && len(intermediateRes) == 0 {
+		return nil, err
+	}
+
+	// we have some items but also an error; we'll just do the result
+	// conversion for what we have, and return the error as well.
+	res := make(BatchCore, len(intermediateRes))
+	for k, v := range intermediateRes {
+		res[k] = v.(*Core)
+	}
+	return res, err
 }
 
 /* ASN */
@@ -273,8 +304,16 @@ func (c *Client) GetASNDetailsBatch(
 	asns []string,
 	opts BatchReqOpts,
 ) (BatchASNDetails, error) {
-	// TODO
-	// wrapper over c.GetBatch; check that `asns` are all ASNs, then pass it
-	// in, and create a new map which is BatchASNDetails.
-	return nil, nil
+	intermediateRes, err := c.GetBatch(asns, opts)
+	if err != nil && len(intermediateRes) == 0 {
+		return nil, err
+	}
+
+	// we have some items but also an error; we'll just do the result
+	// conversion for what we have, and return the error as well.
+	res := make(BatchASNDetails, len(intermediateRes))
+	for k, v := range intermediateRes {
+		res[k] = v.(*ASNDetails)
+	}
+	return res, err
 }
