@@ -276,16 +276,18 @@ func (c *Client) GetIPStrInfoBatch(
 	opts BatchReqOpts,
 ) (BatchCore, error) {
 	intermediateRes, err := c.GetBatch(ips, opts)
+
+	// if we have items in the result, don't throw them away; we'll convert
+	// below and return the error together if it existed.
 	if err != nil && len(intermediateRes) == 0 {
 		return nil, err
 	}
 
-	// we have some items but also an error; we'll just do the result
-	// conversion for what we have, and return the error as well.
 	res := make(BatchCore, len(intermediateRes))
 	for k, v := range intermediateRes {
 		res[k] = v.(*Core)
 	}
+
 	return res, err
 }
 
@@ -305,12 +307,13 @@ func (c *Client) GetASNDetailsBatch(
 	opts BatchReqOpts,
 ) (BatchASNDetails, error) {
 	intermediateRes, err := c.GetBatch(asns, opts)
+
+	// if we have items in the result, don't throw them away; we'll convert
+	// below and return the error together if it existed.
 	if err != nil && len(intermediateRes) == 0 {
 		return nil, err
 	}
 
-	// we have some items but also an error; we'll just do the result
-	// conversion for what we have, and return the error as well.
 	res := make(BatchASNDetails, len(intermediateRes))
 	for k, v := range intermediateRes {
 		res[k] = v.(*ASNDetails)
