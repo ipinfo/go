@@ -42,6 +42,14 @@ func (err *InvalidASNError) Error() string {
 	return "invalid ASN: " + err.ASN
 }
 
+// Set `v.CountryName` properly by mapping country abbreviation to full country
+// name.
+func (v *ASNDetails) setCountryName() {
+	if v.Country != "" {
+		v.CountryName = countriesMap[v.Country]
+	}
+}
+
 // GetASNDetails returns the details for the specified ASN.
 func GetASNDetails(asn string) (*ASNDetails, error) {
 	return DefaultClient.GetASNDetails(asn)
@@ -53,35 +61,31 @@ func (c *Client) GetASNDetails(asn string) (*ASNDetails, error) {
 		return nil, &InvalidASNError{ASN: asn}
 	}
 
-	cacheKey := "asn:" + asn
-
 	// perform cache lookup.
 	if c.Cache != nil {
-		if res, err := c.Cache.Get(cacheKey); err == nil {
+		if res, err := c.Cache.Get(asn); err == nil {
 			return res.(*ASNDetails), nil
 		}
 	}
 
 	// prepare req
-	req, err := c.NewRequest(asn + "/json")
+	req, err := c.newRequest(nil, "GET", asn, nil)
 	if err != nil {
 		return nil, err
 	}
 
 	// do req
 	v := new(ASNDetails)
-	if _, err := c.Do(req, v); err != nil {
+	if _, err := c.do(req, v); err != nil {
 		return nil, err
 	}
 
-	// map country to full country name
-	if v.Country != "" {
-		v.CountryName = countriesMap[v.Country]
-	}
+	// format
+	v.setCountryName()
 
 	// cache req result
 	if c.Cache != nil {
-		if err := c.Cache.Set(cacheKey, v); err != nil {
+		if err := c.Cache.Set(asn, v); err != nil {
 			return v, err
 		}
 	}

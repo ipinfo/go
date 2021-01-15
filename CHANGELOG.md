@@ -1,3 +1,20 @@
+# 2.2.0
+
+- The following functions are now private:
+    - `Client.Do`
+    - `Client.NewRequest`
+    - `CheckResponse`
+- The following **new** functions now exist, which operate on the IPinfo
+  `/batch` endpoint:
+    - `Client.GetBatch`
+    - `Client.GetIPInfoBatch`
+    - `Client.GetIPStrInfoBatch`
+    - `Client.GetASNDetailsBatch`
+    - `ipinfo.GetBatch`
+    - `ipinfo.GetIPInfoBatch`
+    - `ipinfo.GetIPStrInfoBatch`
+    - `ipinfo.GetASNDetailsBatch`
+
 # 2.1.1
 
 - Fixed go module path to have "v2" at the end as necessary.

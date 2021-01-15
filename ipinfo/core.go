@@ -72,6 +72,14 @@ type CoreDomains struct {
 	Domains []string `json:"domains"`
 }
 
+// Set `v.CountryName` properly by mapping country abbreviation to full country
+// name.
+func (v *Core) setCountryName() {
+	if v.Country != "" {
+		v.CountryName = countriesMap[v.Country]
+	}
+}
+
 /* CORE */
 
 // GetIPInfo returns the details for the specified IP.
@@ -81,48 +89,36 @@ func GetIPInfo(ip net.IP) (*Core, error) {
 
 // GetIPInfo returns the details for the specified IP.
 func (c *Client) GetIPInfo(ip net.IP) (*Core, error) {
-	var cacheKey string
-	var relURL string
-
-	if ip == nil {
-		// NOTE: we assume that if no IP is given, the user has the same IP as
-		// when a previous cache lookup happened, so if that result still
-		// exists, we return it. This is an issue if the user's IP changes.
-		cacheKey = "ip:nil"
-		relURL = "json"
-	} else {
-		ipStr := ip.String()
-		cacheKey = "ip:" + ipStr
-		relURL = ipStr + "/json"
+	relURL := ""
+	if ip != nil {
+		relURL = ip.String()
 	}
 
 	// perform cache lookup.
 	if c.Cache != nil {
-		if res, err := c.Cache.Get(cacheKey); err == nil {
+		if res, err := c.Cache.Get(relURL); err == nil {
 			return res.(*Core), nil
 		}
 	}
 
 	// prepare req
-	req, err := c.NewRequest(relURL)
+	req, err := c.newRequest(nil, "GET", relURL, nil)
 	if err != nil {
 		return nil, err
 	}
 
 	// do req
 	v := new(Core)
-	if _, err := c.Do(req, v); err != nil {
+	if _, err := c.do(req, v); err != nil {
 		return nil, err
 	}
 
-	// map country to full country name
-	if v.Country != "" {
-		v.CountryName = countriesMap[v.Country]
-	}
+	// format
+	v.setCountryName()
 
 	// cache req result
 	if c.Cache != nil {
-		if err := c.Cache.Set(cacheKey, v); err != nil {
+		if err := c.Cache.Set(relURL, v); err != nil {
 			// NOTE: still return the value even if the cache fails.
 			return v, err
 		}
