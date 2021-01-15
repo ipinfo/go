@@ -27,6 +27,7 @@ func main() {
 				"AS321",
 			},
 			ipinfo.BatchReqOpts{
+				BatchSize:       2,
 				TimeoutPerBatch: 0,
 				TimeoutTotal:    5,
 			},
