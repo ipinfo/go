@@ -4,8 +4,16 @@
     - `Client.Do`
     - `Client.NewRequest`
     - `CheckResponse`
-
-TODO
+- The following **new** functions now exist, which operate on the IPinfo
+  `/batch` endpoint:
+    - `Client.GetBatch`
+    - `Client.GetIPInfoBatch`
+    - `Client.GetIPStrInfoBatch`
+    - `Client.GetASNDetailsBatch`
+    - `ipinfo.GetBatch`
+    - `ipinfo.GetIPInfoBatch`
+    - `ipinfo.GetIPStrInfoBatch`
+    - `ipinfo.GetASNDetailsBatch`
 
 # 2.1.1
 
