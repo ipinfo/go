@@ -58,12 +58,13 @@ type CorePrivacy struct {
 
 // CoreAbuse represents abuse data for the Core API.
 type CoreAbuse struct {
-	Address string `json:"address"`
-	Country string `json:"country"`
-	Email   string `json:"email"`
-	Name    string `json:"name"`
-	Network string `json:"network"`
-	Phone   string `json:"phone"`
+	Address     string `json:"address"`
+	Country     string `json:"country"`
+	CountryName string `json:'-"`
+	Email       string `json:"email"`
+	Name        string `json:"name"`
+	Network     string `json:"network"`
+	Phone       string `json:"phone"`
 }
 
 // CoreDomains represents domains data for the Core API.
@@ -73,11 +74,12 @@ type CoreDomains struct {
 	Domains []string `json:"domains"`
 }
 
-// Set `v.CountryName` properly by mapping country abbreviation to full country
-// name.
 func (v *Core) setCountryName() {
 	if v.Country != "" {
 		v.CountryName = countriesMap[v.Country]
+	}
+	if v.Abuse != nil && v.Abuse.Country != "" {
+		v.Abuse.CountryName = countriesMap[v.Abuse.Country]
 	}
 }
 
