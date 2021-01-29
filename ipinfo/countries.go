@@ -1,5 +1,11 @@
 package ipinfo
 
+// GetCountryName gets the full name of a country from its code, e.g.
+// "PK" -> "Pakistan".
+func GetCountryName(country string) string {
+	return countriesMap[country]
+}
+
 var countriesMap = map[string]string{
 	"BD": "Bangladesh",
 	"BE": "Belgium",

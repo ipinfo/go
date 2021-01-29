@@ -1,3 +1,7 @@
+# 2.2.2
+
+- Added a function `GetCountryName` to transform country code into full name.
+
 # 2.2.1
 
 - Added the `Core.Anycast` boolean field.

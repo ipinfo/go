@@ -42,8 +42,6 @@ func (err *InvalidASNError) Error() string {
 	return "invalid ASN: " + err.ASN
 }
 
-// Set `v.CountryName` properly by mapping country abbreviation to full country
-// name.
 func (v *ASNDetails) setCountryName() {
 	if v.Country != "" {
 		v.CountryName = countriesMap[v.Country]
