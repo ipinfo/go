@@ -1,3 +1,7 @@
+# 2.2.1
+
+- Added the `Core.Anycast` boolean field.
+
 # 2.2.0
 
 - The following functions are now private:

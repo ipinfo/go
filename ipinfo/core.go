@@ -8,6 +8,7 @@ import (
 type Core struct {
 	IP          net.IP       `json:"ip"`
 	Hostname    string       `json:"hostname"`
+	Anycast     bool         `json:"anycast"`
 	City        string       `json:"city"`
 	Region      string       `json:"region"`
 	Country     string       `json:"country"`
