@@ -8,6 +8,7 @@ import (
 type Core struct {
 	IP          net.IP       `json:"ip"`
 	Hostname    string       `json:"hostname"`
+	Anycast     bool         `json:"anycast"`
 	City        string       `json:"city"`
 	Region      string       `json:"region"`
 	Country     string       `json:"country"`
@@ -157,6 +158,22 @@ func (c *Client) GetIPHostname(ip net.IP) (string, error) {
 		return "", err
 	}
 	return core.Hostname, nil
+}
+
+/* ANYCAST */
+
+// GetIPAnycast returns whether an IP is an anycast IP.
+func GetIPAnycast(ip net.IP) (bool, error) {
+	return DefaultClient.GetIPAnycast(ip)
+}
+
+// GetIPAnycast returns whether an IP is an anycast IP.
+func (c *Client) GetIPAnycast(ip net.IP) (bool, error) {
+	core, err := c.GetIPInfo(ip)
+	if err != nil {
+		return false, err
+	}
+	return core.Anycast, nil
 }
 
 /* CITY */
