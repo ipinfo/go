@@ -160,6 +160,22 @@ func (c *Client) GetIPHostname(ip net.IP) (string, error) {
 	return core.Hostname, nil
 }
 
+/* ANYCAST */
+
+// GetIPAnycast returns whether an IP is an anycast IP.
+func GetIPAnycast(ip net.IP) (bool, error) {
+	return DefaultClient.GetIPAnycast(ip)
+}
+
+// GetIPAnycast returns whether an IP is an anycast IP.
+func (c *Client) GetIPAnycast(ip net.IP) (bool, error) {
+	core, err := c.GetIPInfo(ip)
+	if err != nil {
+		return false, err
+	}
+	return core.Anycast, nil
+}
+
 /* CITY */
 
 // GetIPCity returns the city for the specified IP.
