@@ -6,72 +6,72 @@ import (
 
 // Core represents data from the Core API.
 type Core struct {
-	IP          net.IP       `json:"ip"`
-	Hostname    string       `json:"hostname"`
-	Anycast     bool         `json:"anycast"`
-	City        string       `json:"city"`
-	Region      string       `json:"region"`
-	Country     string       `json:"country"`
-	CountryName string       `json:'-"`
-	Location    string       `json:"loc"`
-	Org         string       `json:"org"`
-	Postal      string       `json:"postal"`
-	Timezone    string       `json:"timezone"`
-	ASN         *CoreASN     `json:"asn"`
-	Company     *CoreCompany `json:"company"`
-	Carrier     *CoreCarrier `json:"carrier"`
-	Privacy     *CorePrivacy `json:"privacy"`
-	Abuse       *CoreAbuse   `json:"abuse"`
-	Domains     *CoreDomains `json:"domains"`
+	IP          net.IP       `json:"ip" csv:"ip"`
+	Hostname    string       `json:"hostname" csv:"hostname"`
+	Anycast     bool         `json:"anycast" csv:"anycast"`
+	City        string       `json:"city" csv:"city"`
+	Region      string       `json:"region" csv:"region"`
+	Country     string       `json:"country" csv:"country"`
+	CountryName string       `json:"-" csv:"country_name"`
+	Location    string       `json:"loc" csv:"loc"`
+	Org         string       `json:"org" csv:"org"`
+	Postal      string       `json:"postal" csv:"postal"`
+	Timezone    string       `json:"timezone" csv:"timezone"`
+	ASN         *CoreASN     `json:"asn" csv:"asn_,inline"`
+	Company     *CoreCompany `json:"company" csv:"company_,inline"`
+	Carrier     *CoreCarrier `json:"carrier" csv:"carrier_,inline"`
+	Privacy     *CorePrivacy `json:"privacy" csv:"privacy_,inline"`
+	Abuse       *CoreAbuse   `json:"abuse" csv:"abuse_,inline"`
+	Domains     *CoreDomains `json:"domains" csv:"domains_,inline"`
 }
 
 // CoreASN represents ASN data for the Core API.
 type CoreASN struct {
-	ASN    string `json:"asn"`
-	Name   string `json:"name"`
-	Domain string `json:"domain"`
-	Route  string `json:"route"`
-	Type   string `json:"type"`
+	ASN    string `json:"asn" csv:"id"`
+	Name   string `json:"name" csv:"asn"`
+	Domain string `json:"domain" csv:"domain"`
+	Route  string `json:"route" csv:"route"`
+	Type   string `json:"type" csv:"type"`
 }
 
 // CoreCompany represents company data for the Core API.
 type CoreCompany struct {
-	Name   string `json:"name"`
-	Domain string `json:"domain"`
-	Type   string `json:"type"`
+	Name   string `json:"name" csv:"name"`
+	Domain string `json:"domain" csv:"domain"`
+	Type   string `json:"type" csv:"type"`
 }
 
 // CoreCarrier represents carrier data for the Core API.
 type CoreCarrier struct {
-	Name string `json:"name"`
-	MCC  string `json:"mcc"`
-	MNC  string `json:"mnc"`
+	Name string `json:"name" csv:"name"`
+	MCC  string `json:"mcc" csv:"mcc"`
+	MNC  string `json:"mnc" csv:"mnc"`
 }
 
 // CorePrivacy represents privacy data for the Core API.
 type CorePrivacy struct {
-	VPN     bool `json:"vpn"`
-	Proxy   bool `json:"proxy"`
-	Tor     bool `json:"tor"`
-	Hosting bool `json:"hosting"`
+	VPN     bool `json:"vpn" csv:"vpn"`
+	Proxy   bool `json:"proxy" csv:"proxy"`
+	Tor     bool `json:"tor" csv:"tor"`
+	Hosting bool `json:"hosting" csv:"hosting"`
 }
 
 // CoreAbuse represents abuse data for the Core API.
 type CoreAbuse struct {
-	Address     string `json:"address"`
-	Country     string `json:"country"`
-	CountryName string `json:'-"`
-	Email       string `json:"email"`
-	Name        string `json:"name"`
-	Network     string `json:"network"`
-	Phone       string `json:"phone"`
+	Address     string `json:"address" csv:"address"`
+	Country     string `json:"country" csv:"country"`
+	CountryName string `json:"-" csv:"country_name"`
+	Email       string `json:"email" csv:"email"`
+	Name        string `json:"name" csv:"name"`
+	Network     string `json:"network" csv:"network"`
+	Phone       string `json:"phone" csv:"phone"`
 }
 
 // CoreDomains represents domains data for the Core API.
 type CoreDomains struct {
-	IP      string   `json:"ip"`
-	Total   uint64   `json:"total"`
-	Domains []string `json:"domains"`
+	IP      string   `json:"ip" csv:"-"`
+	Total   uint64   `json:"total" csv:"total"`
+	Domains []string `json:"domains" csv:"-"`
 }
 
 func (v *Core) setCountryName() {
