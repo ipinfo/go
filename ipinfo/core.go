@@ -12,17 +12,17 @@ type Core struct {
 	City        string       `json:"city" csv:"city"`
 	Region      string       `json:"region" csv:"region"`
 	Country     string       `json:"country" csv:"country"`
-	CountryName string       `json:"-" csv:"country_name"`
+	CountryName string       `json:"country_name" csv:"country_name"`
 	Location    string       `json:"loc" csv:"loc"`
 	Org         string       `json:"org" csv:"org"`
 	Postal      string       `json:"postal" csv:"postal"`
 	Timezone    string       `json:"timezone" csv:"timezone"`
-	ASN         *CoreASN     `json:"asn" csv:"asn_,inline"`
-	Company     *CoreCompany `json:"company" csv:"company_,inline"`
-	Carrier     *CoreCarrier `json:"carrier" csv:"carrier_,inline"`
-	Privacy     *CorePrivacy `json:"privacy" csv:"privacy_,inline"`
-	Abuse       *CoreAbuse   `json:"abuse" csv:"abuse_,inline"`
-	Domains     *CoreDomains `json:"domains" csv:"domains_,inline"`
+	ASN         *CoreASN     `json:"asn,omitempty" csv:"asn_,inline"`
+	Company     *CoreCompany `json:"company,omitempty" csv:"company_,inline"`
+	Carrier     *CoreCarrier `json:"carrier,omitempty" csv:"carrier_,inline"`
+	Privacy     *CorePrivacy `json:"privacy,omitempty" csv:"privacy_,inline"`
+	Abuse       *CoreAbuse   `json:"abuse,omitempty" csv:"abuse_,inline"`
+	Domains     *CoreDomains `json:"domains,omitempty" csv:"domains_,inline"`
 }
 
 // CoreASN represents ASN data for the Core API.
@@ -60,7 +60,7 @@ type CorePrivacy struct {
 type CoreAbuse struct {
 	Address     string `json:"address" csv:"address"`
 	Country     string `json:"country" csv:"country"`
-	CountryName string `json:"-" csv:"country_name"`
+	CountryName string `json:"country_name" csv:"country_name"`
 	Email       string `json:"email" csv:"email"`
 	Name        string `json:"name" csv:"name"`
 	Network     string `json:"network" csv:"network"`
