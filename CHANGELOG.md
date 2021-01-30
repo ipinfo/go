@@ -1,3 +1,9 @@
+# 2.2.3
+
+- Added CSV tags for `Core` data for easier CSV marshaling.
+- Omit empty `Core` objects when encoding JSON.
+- Encode `Core.CountryName` and `Core.Abuse.CountryName` properly in JSON.
+
 # 2.2.2
 
 - Added a function `GetCountryName` to transform country code into full name.
