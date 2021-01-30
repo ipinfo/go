@@ -1,3 +1,7 @@
+# 2.2.3
+
+- Added CSV tags for `Core` data for easier CSV marshaling.
+
 # 2.2.2
 
 - Added a function `GetCountryName` to transform country code into full name.
