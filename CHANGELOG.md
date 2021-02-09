@@ -1,3 +1,7 @@
+# 2.3.0
+
+- Added support for IP summary API.
+
 # 2.2.3
 
 - Added CSV tags for `Core` data for easier CSV marshaling.
