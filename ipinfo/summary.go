@@ -18,6 +18,8 @@ type IPSummary struct {
 	Companies map[string]uint64 `json:"companies"`
 	IPTypes   map[string]uint64 `json:"ipTypes"`
 	Routes    map[string]uint64 `json:"routes"`
+	Carriers  map[string]uint64 `json:"carriers"`
+	Mobile    uint64            `json:"mobile"`
 	Privacy   struct {
 		VPN     uint64 `json:"vpn"`
 		Proxy   uint64 `json:"proxy"`
