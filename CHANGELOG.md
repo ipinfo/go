@@ -1,3 +1,7 @@
+# 2.3.1
+
+- Added more summary fields (carrier & mobile data).
+
 # 2.3.0
 
 - Added support for IP summary API.
