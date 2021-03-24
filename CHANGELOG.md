@@ -1,3 +1,7 @@
+# 2.3.2
+
+- Added the `Core.Bogon` boolean field.
+
 # 2.3.1
 
 - Added more summary fields (carrier & mobile data).
