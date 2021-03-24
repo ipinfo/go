@@ -7,16 +7,17 @@ import (
 // Core represents data from the Core API.
 type Core struct {
 	IP          net.IP       `json:"ip" csv:"ip"`
-	Hostname    string       `json:"hostname" csv:"hostname"`
-	Anycast     bool         `json:"anycast" csv:"anycast"`
-	City        string       `json:"city" csv:"city"`
-	Region      string       `json:"region" csv:"region"`
-	Country     string       `json:"country" csv:"country"`
-	CountryName string       `json:"country_name" csv:"country_name"`
-	Location    string       `json:"loc" csv:"loc"`
-	Org         string       `json:"org" csv:"org"`
-	Postal      string       `json:"postal" csv:"postal"`
-	Timezone    string       `json:"timezone" csv:"timezone"`
+	Hostname    string       `json:"hostname,omitempty" csv:"hostname"`
+	Bogon       bool         `json:"bogon,omitempty" csv:"bogon"`
+	Anycast     bool         `json:"anycast,omitempty" csv:"anycast"`
+	City        string       `json:"city,omitempty" csv:"city"`
+	Region      string       `json:"region,omitempty" csv:"region"`
+	Country     string       `json:"country,omitempty" csv:"country"`
+	CountryName string       `json:"country_name,omitempty" csv:"country_name"`
+	Location    string       `json:"loc,omitempty" csv:"loc"`
+	Org         string       `json:"org,omitempty" csv:"org"`
+	Postal      string       `json:"postal,omitempty" csv:"postal"`
+	Timezone    string       `json:"timezone,omitempty" csv:"timezone"`
 	ASN         *CoreASN     `json:"asn,omitempty" csv:"asn_,inline"`
 	Company     *CoreCompany `json:"company,omitempty" csv:"company_,inline"`
 	Carrier     *CoreCarrier `json:"carrier,omitempty" csv:"carrier_,inline"`
@@ -160,6 +161,22 @@ func (c *Client) GetIPHostname(ip net.IP) (string, error) {
 		return "", err
 	}
 	return core.Hostname, nil
+}
+
+/* BOGON */
+
+// GetIPBogon returns whether an IP is a bogon IP.
+func GetIPBogon(ip net.IP) (bool, error) {
+	return DefaultClient.GetIPBogon(ip)
+}
+
+// GetIPBogon returns whether an IP is a bogon IP.
+func (c *Client) GetIPBogon(ip net.IP) (bool, error) {
+	core, err := c.GetIPInfo(ip)
+	if err != nil {
+		return false, err
+	}
+	return core.Bogon, nil
 }
 
 /* ANYCAST */
