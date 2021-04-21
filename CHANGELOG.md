@@ -1,3 +1,7 @@
+# 2.4.0
+
+- Added support for IP Map API.
+
 # 2.3.2
 
 - Added the `Core.Bogon` boolean field.
