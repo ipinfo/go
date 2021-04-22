@@ -1,3 +1,9 @@
+# 2.5.0
+
+- Added versioned cache keys.
+  This allows more reliable changes to cached data in the future without
+  causing confusing incompatibilities. This should be transparent to the user.
+
 # 2.4.0
 
 - Added support for IP Map API.
