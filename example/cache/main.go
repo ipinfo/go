@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"os"
 
 	"github.com/ipinfo/go/v2/ipinfo"
 	"github.com/ipinfo/go/v2/ipinfo/cache"
@@ -39,6 +40,7 @@ var dummyCache = ipinfo.NewCache(newDummyCacheEngine())
 
 func main() {
 	ipinfo.SetCache(dummyCache)
+	ipinfo.SetToken(os.Getenv("TOKEN"))
 	ip := net.ParseIP("8.8.8.8")
 
 	for i := 0; i < 2; i++ {

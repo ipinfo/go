@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"os"
 	"time"
 
 	"github.com/ipinfo/go/v2/ipinfo"
@@ -16,6 +17,7 @@ func main() {
 			cache.NewInMemory().WithExpiration(5 * time.Minute),
 		),
 	)
+	ipinfo.SetToken(os.Getenv("TOKEN"))
 	ip := net.ParseIP("8.8.8.8")
 
 	for i := 0; i < 2; i++ {
