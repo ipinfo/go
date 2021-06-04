@@ -1,3 +1,7 @@
+# 2.5.1
+
+- Added the `IPSummary.Domains` field.
+
 # 2.5.0
 
 - Added versioned cache keys.
