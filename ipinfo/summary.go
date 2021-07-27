@@ -3,7 +3,6 @@ package ipinfo
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"net"
 )
 
@@ -44,7 +43,7 @@ func (c *Client) GetIPSummary(ips []net.IP) (*IPSummary, error) {
 	}
 	jsonBuf := bytes.NewBuffer(jsonArrStr)
 
-	req, err := c.newRequest(nil, "POST", "summarize", jsonBuf)
+	req, err := c.newRequest(nil, "POST", "summarize?cli=1", jsonBuf)
 	if err != nil {
 		return nil, err
 	}

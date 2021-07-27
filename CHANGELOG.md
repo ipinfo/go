@@ -1,3 +1,8 @@
+# 2.5.2
+
+- Removed the IP list length constraints on `GetIPSummary`.
+  This is because the underlying API has changed.
+
 # 2.5.1
 
 - Added the `IPSummary.Domains` field.
