@@ -1,4 +1,8 @@
-# 2.5.2
+# 2.5.3
+
+- Dummy release to make up for a bug in 2.5.2.
+
+# 2.5.2 (skip this release)
 
 - Removed the IP list length constraints on `GetIPSummary`.
   This is because the underlying API has changed.
