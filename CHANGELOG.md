@@ -1,3 +1,8 @@
+# 2.5.4
+
+- Fixed issue where disabling per-batch timeouts was impossible with negative
+  numbers, contrary to what the documentation says.
+
 # 2.5.3
 
 - Dummy release to make up for a bug in 2.5.2.
