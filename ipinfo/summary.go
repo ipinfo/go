@@ -25,6 +25,7 @@ type IPSummary struct {
 		Proxy   uint64 `json:"proxy"`
 		Hosting uint64 `json:"hosting"`
 		Tor     uint64 `json:"tor"`
+		Relay   uint64 `json:"relay"`
 	} `json:"privacy"`
 	Anycast uint64 `json:"anycast"`
 	Bogon   uint64 `json:"bogon"`
