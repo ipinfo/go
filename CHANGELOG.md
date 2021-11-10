@@ -1,3 +1,9 @@
+# 2.6.0
+
+- Added `Relay` and `Service` fields to `CorePrivacy`.
+- Added `Relay` field to `IPSummary.Privacy` and `PrivacyServices` to
+  `IPSummary`.
+
 # 2.5.4
 
 - Fixed issue where disabling per-batch timeouts was impossible with negative
