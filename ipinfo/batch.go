@@ -9,6 +9,7 @@ import (
 	"sync"
 	"time"
 	"math"
+	"fmt" // TODO: remove this
 
 	"golang.org/x/sync/errgroup"
 )
@@ -131,6 +132,9 @@ func (c *Client) GetBatch(
 	} else {
 		totalWorkerGoroutines = numberOfBatches
 	}
+	// TODO: remove this, just testing
+	fmt.Println("totalWorkerGoroutines:")
+	fmt.Println(totalWorkerGoroutines)
 
 	// use correct timeout per batch; either default or user-provided.
 	if opts.TimeoutPerBatch == 0 {
@@ -148,6 +152,28 @@ func (c *Client) GetBatch(
 		defer totalTimeoutCancel()
 	} else {
 		totalTimeoutCtx = context.Background()
+	}
+
+	// channel, source of input batches
+	batches := make(chan []string)
+	go func() {
+		defer close(batches)
+		for i := 0; i < len(lookupUrls); i += batchSize {
+			end := i + batchSize
+			if end > len(lookupUrls) {
+				end = len(lookupUrls)
+			}
+
+			urlsChunk := lookupUrls[i:end]
+			batches <- urlsChunk
+		}
+	}()
+
+	// TODO: remove this, just testing
+	fmt.Println("----------------PRINTING CHANNEL STREAM-----------------")
+	for batchUrls := range batches {
+		fmt.Println("batchUrls:")
+		fmt.Println(batchUrls)
 	}
 
 	errg, ctx := errgroup.WithContext(totalTimeoutCtx)
