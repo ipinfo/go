@@ -8,6 +8,7 @@ import (
 	"strings"
 	"sync"
 	"time"
+	"math"
 
 	"golang.org/x/sync/errgroup"
 )
@@ -15,6 +16,7 @@ import (
 const (
 	batchMaxSize           = 1000
 	batchReqTimeoutDefault = 5
+	batchMaxGoroutines	   = 4
 )
 
 // Internal batch type used by common batch functionality to temporarily store
@@ -85,6 +87,8 @@ func (c *Client) GetBatch(
 ) (Batch, error) {
 	var batchSize int
 	var timeoutPerBatch int64
+	var numberOfBatches int
+	var totalWorkerGoroutines int
 	var totalTimeoutCtx context.Context
 	var totalTimeoutCancel context.CancelFunc
 	var lookupUrls []string
@@ -116,6 +120,16 @@ func (c *Client) GetBatch(
 		batchSize = batchMaxSize
 	} else {
 		batchSize = int(opts.BatchSize)
+	}
+
+	// number of batches calculated afer calculating correct batch size
+	numberOfBatches = int(math.Ceil(float64(len(lookupUrls))/float64(batchSize)))
+
+	// use number of batches as total worker goroutines, clipping it to max goroutines.
+	if numberOfBatches > batchMaxGoroutines {
+		totalWorkerGoroutines = batchMaxGoroutines
+	} else {
+		totalWorkerGoroutines = numberOfBatches
 	}
 
 	// use correct timeout per batch; either default or user-provided.
