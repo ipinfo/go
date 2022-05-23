@@ -64,10 +64,10 @@ type BatchReqOpts struct {
 	// 0 means no total timeout; `TimeoutPerBatch` will still apply.
 	TimeoutTotal uint64
 
-	// ConcurrentBatchRequestsLimit is the maximum limit for making concurrent batch
-	// requests at a time.
+	// ConcurrentBatchRequestsLimit is the maximum number of concurrent batch
+	// requests that will be mid-flight for inputs that exceed the batch limit.
 	//
-	// 0 means to use default; any negative number will disable the maximum limit.
+	// 0 means to use a default of 8; any negative number implies unlimited concurrency.
 	ConcurrentBatchRequestsLimit int
 
 	// Filter, if turned on, will filter out a URL whose value was deemed empty
