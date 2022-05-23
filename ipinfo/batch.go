@@ -8,7 +8,6 @@ import (
 	"strings"
 	"sync"
 	"time"
-	"fmt" // TODO: remove this
 
 	"golang.org/x/sync/errgroup"
 )
@@ -131,10 +130,6 @@ func (c *Client) GetBatch(
 		maxConcurrentBatchRequests = batchDefaultConcurrentRequestsLimit
 	}
 
-	// TODO: remove this, just testing
-	fmt.Println("maxConcurrentBatchRequests:")
-	fmt.Println(maxConcurrentBatchRequests)
-
 	// use correct timeout per batch; either default or user-provided.
 	if opts.TimeoutPerBatch == 0 {
 		timeoutPerBatch = batchReqTimeoutDefault
@@ -155,8 +150,6 @@ func (c *Client) GetBatch(
 
 	errg, ctx := errgroup.WithContext(totalTimeoutCtx)
 	errg.SetLimit(maxConcurrentBatchRequests)
-	// TODO: remove this, just testing
-	fmt.Println("----------------CONSUMING batches from CHANNEL-----------------")
 	for i := 0; i < len(lookupUrls); i += batchSize {
 		end := i + batchSize
 		if end > len(lookupUrls) {
@@ -164,14 +157,7 @@ func (c *Client) GetBatch(
 		}
 
 		urlsChunk := lookupUrls[i:end]
-		// TODO: remove this, just testing
-		fmt.Println("urlsChunk:")
-		fmt.Println(urlsChunk)
 		errg.Go(func() error {
-			// TODO: remove this, just testing
-			defer fmt.Println("----------------GOROUTINE ENDED-----------------")
-			fmt.Println("----------------GOROUTINE STARTED-----------------")
-	
 			var postURL string
 
 			// prepare request.
