@@ -64,8 +64,11 @@ type BatchReqOpts struct {
 	// 0 means no total timeout; `TimeoutPerBatch` will still apply.
 	TimeoutTotal uint64
 
-	// 0 means to limit the number of concurrent batch requests to default value.
-	ConcurrentBatchRequestsLimit uint32
+	// ConcurrentBatchRequestsLimit is the maximum limit for making concurrent batch
+	// requests at a time.
+	//
+	// 0 means to use default; any negative number will disable the maximum limit.
+	ConcurrentBatchRequestsLimit int
 
 	// Filter, if turned on, will filter out a URL whose value was deemed empty
 	// on the server.
@@ -127,7 +130,7 @@ func (c *Client) GetBatch(
 	if opts.ConcurrentBatchRequestsLimit == 0 {
 		maxConcurrentBatchRequests = batchDefaultConcurrentRequestsLimit
 	} else {
-		maxConcurrentBatchRequests = int(opts.ConcurrentBatchRequestsLimit)
+		maxConcurrentBatchRequests = opts.ConcurrentBatchRequestsLimit
 	}
 
 	// use correct timeout per batch; either default or user-provided.
