@@ -13,9 +13,9 @@ import (
 )
 
 const (
-	batchMaxSize           = 1000
-	batchReqTimeoutDefault = 5
-	batchDefaultConcurrentRequestsLimit	   = 8
+	batchMaxSize                        = 1000
+	batchReqTimeoutDefault              = 5
+	batchDefaultConcurrentRequestsLimit = 8
 )
 
 // Internal batch type used by common batch functionality to temporarily store
@@ -124,10 +124,10 @@ func (c *Client) GetBatch(
 	}
 
 	// use correct concurrent requests limit; either default or user-provided.
-	if opts.ConcurrentBatchRequestsLimit != 0 {
-		maxConcurrentBatchRequests = int(opts.ConcurrentBatchRequestsLimit)
-	} else {
+	if opts.ConcurrentBatchRequestsLimit == 0 {
 		maxConcurrentBatchRequests = batchDefaultConcurrentRequestsLimit
+	} else {
+		maxConcurrentBatchRequests = int(opts.ConcurrentBatchRequestsLimit)
 	}
 
 	// use correct timeout per batch; either default or user-provided.
