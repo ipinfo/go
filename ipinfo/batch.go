@@ -64,7 +64,7 @@ type BatchReqOpts struct {
 	// 0 means no total timeout; `TimeoutPerBatch` will still apply.
 	TimeoutTotal uint64
 
-	// 0 means to limit the concurrent batch requests to default value.
+	// 0 means to limit the number of concurrent batch requests to default value.
 	ConcurrentBatchRequestsLimit uint32
 
 	// Filter, if turned on, will filter out a URL whose value was deemed empty
