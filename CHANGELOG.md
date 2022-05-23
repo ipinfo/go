@@ -1,3 +1,8 @@
+# 2.7.0
+
+- Made batch operations limit their concurrency to 8 batches by default, but
+  configurable.
+
 # 2.6.0
 
 - Added `Relay` and `Service` fields to `CorePrivacy`.
