@@ -169,21 +169,18 @@ func (c *Client) GetBatch(
 		}
 	}()
 
-	// TODO: remove this, just testing
-	fmt.Println("----------------PRINTING CHANNEL STREAM-----------------")
-	for batchUrls := range batches {
-		fmt.Println("batchUrls:")
-		fmt.Println(batchUrls)
-	}
-
 	errg, ctx := errgroup.WithContext(totalTimeoutCtx)
-	for i := 0; i < len(lookupUrls); i += batchSize {
-		end := i + batchSize
-		if end > len(lookupUrls) {
-			end = len(lookupUrls)
-		}
-
-		urlsChunk := lookupUrls[i:end]
+	// TODO: remove this, just testing
+	fmt.Println("----------------CONSUMING batches from CHANNEL-----------------")
+	for subBatch := range batches {	
+		
+		// TODO: remove this, just testing
+		fmt.Println("subBatch:")
+		fmt.Println(subBatch)
+		
+		// due to issue of closures and goroutines, a new local variable needs 
+		// to be initialized and used
+		urlsChunk := subBatch
 		errg.Go(func() error {
 			var postURL string
 
