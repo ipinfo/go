@@ -154,33 +154,20 @@ func (c *Client) GetBatch(
 		totalTimeoutCtx = context.Background()
 	}
 
-	// channel, source of input batches
-	batches := make(chan []string)
-	go func() {
-		defer close(batches)
-		for i := 0; i < len(lookupUrls); i += batchSize {
-			end := i + batchSize
-			if end > len(lookupUrls) {
-				end = len(lookupUrls)
-			}
-
-			urlsChunk := lookupUrls[i:end]
-			batches <- urlsChunk
-		}
-	}()
-
 	errg, ctx := errgroup.WithContext(totalTimeoutCtx)
+	errg.SetLimit(totalWorkerGoroutines)
 	// TODO: remove this, just testing
 	fmt.Println("----------------CONSUMING batches from CHANNEL-----------------")
-	for subBatch := range batches {	
-		
+	for i := 0; i < len(lookupUrls); i += batchSize {
+		end := i + batchSize
+		if end > len(lookupUrls) {
+			end = len(lookupUrls)
+		}
+
+		urlsChunk := lookupUrls[i:end]
 		// TODO: remove this, just testing
-		fmt.Println("subBatch:")
-		fmt.Println(subBatch)
-		
-		// due to issue of closures and goroutines, a new local variable needs 
-		// to be initialized and used
-		urlsChunk := subBatch
+		fmt.Println("urlsChunk:")
+		fmt.Println(urlsChunk)
 		errg.Go(func() error {
 			var postURL string
 
