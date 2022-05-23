@@ -8,7 +8,6 @@ import (
 	"strings"
 	"sync"
 	"time"
-	"math"
 	"fmt" // TODO: remove this
 
 	"golang.org/x/sync/errgroup"
@@ -17,7 +16,7 @@ import (
 const (
 	batchMaxSize           = 1000
 	batchReqTimeoutDefault = 5
-	batchMaxGoroutines	   = 4
+	batchDefaultConcurrentRequestsLimit	   = 8
 )
 
 // Internal batch type used by common batch functionality to temporarily store
@@ -66,6 +65,9 @@ type BatchReqOpts struct {
 	// 0 means no total timeout; `TimeoutPerBatch` will still apply.
 	TimeoutTotal uint64
 
+	// 0 means to limit the concurrent batch requests to default value.
+	ConcurrentBatchRequestsLimit uint32
+
 	// Filter, if turned on, will filter out a URL whose value was deemed empty
 	// on the server.
 	Filter bool
@@ -88,8 +90,7 @@ func (c *Client) GetBatch(
 ) (Batch, error) {
 	var batchSize int
 	var timeoutPerBatch int64
-	var numberOfBatches int
-	var totalWorkerGoroutines int
+	var maxConcurrentBatchRequests int
 	var totalTimeoutCtx context.Context
 	var totalTimeoutCancel context.CancelFunc
 	var lookupUrls []string
@@ -123,18 +124,16 @@ func (c *Client) GetBatch(
 		batchSize = int(opts.BatchSize)
 	}
 
-	// number of batches calculated afer calculating correct batch size
-	numberOfBatches = int(math.Ceil(float64(len(lookupUrls))/float64(batchSize)))
-
-	// use number of batches as total worker goroutines, clipping it to max goroutines.
-	if numberOfBatches > batchMaxGoroutines {
-		totalWorkerGoroutines = batchMaxGoroutines
+	// use correct concurrent requests limit; either default or user-provided.
+	if opts.ConcurrentBatchRequestsLimit != 0 {
+		maxConcurrentBatchRequests = int(opts.ConcurrentBatchRequestsLimit)
 	} else {
-		totalWorkerGoroutines = numberOfBatches
+		maxConcurrentBatchRequests = batchDefaultConcurrentRequestsLimit
 	}
+
 	// TODO: remove this, just testing
-	fmt.Println("totalWorkerGoroutines:")
-	fmt.Println(totalWorkerGoroutines)
+	fmt.Println("maxConcurrentBatchRequests:")
+	fmt.Println(maxConcurrentBatchRequests)
 
 	// use correct timeout per batch; either default or user-provided.
 	if opts.TimeoutPerBatch == 0 {
@@ -155,7 +154,7 @@ func (c *Client) GetBatch(
 	}
 
 	errg, ctx := errgroup.WithContext(totalTimeoutCtx)
-	errg.SetLimit(totalWorkerGoroutines)
+	errg.SetLimit(maxConcurrentBatchRequests)
 	// TODO: remove this, just testing
 	fmt.Println("----------------CONSUMING batches from CHANNEL-----------------")
 	for i := 0; i < len(lookupUrls); i += batchSize {
@@ -169,6 +168,10 @@ func (c *Client) GetBatch(
 		fmt.Println("urlsChunk:")
 		fmt.Println(urlsChunk)
 		errg.Go(func() error {
+			// TODO: remove this, just testing
+			defer fmt.Println("----------------GOROUTINE ENDED-----------------")
+			fmt.Println("----------------GOROUTINE STARTED-----------------")
+	
 			var postURL string
 
 			// prepare request.
