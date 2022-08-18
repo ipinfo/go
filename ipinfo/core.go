@@ -79,10 +79,10 @@ type CoreDomains struct {
 
 func (v *Core) setCountryName() {
 	if v.Country != "" {
-		v.CountryName = countriesMap[v.Country]
+		v.CountryName = countriesMap[v.Country].Name
 	}
 	if v.Abuse != nil && v.Abuse.Country != "" {
-		v.Abuse.CountryName = countriesMap[v.Abuse.Country]
+		v.Abuse.CountryName = countriesMap[v.Abuse.Country].Name
 	}
 }
 
