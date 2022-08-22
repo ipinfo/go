@@ -44,7 +44,7 @@ func (err *InvalidASNError) Error() string {
 
 func (v *ASNDetails) setCountryName() {
 	if v.Country != "" {
-		v.CountryName = countriesMap[v.Country].Name
+		v.CountryName = countriesMap[v.Country]
 	}
 }
 

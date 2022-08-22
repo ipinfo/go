@@ -1,3 +1,8 @@
+# 2.8.0
+
+- Added an `IsEU` field to `Core`, which checks whether the IP geolocates to a
+  country within the European Union (EU).
+
 # 2.7.0
 
 - Made batch operations limit their concurrency to 8 batches by default, but
