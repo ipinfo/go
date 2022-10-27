@@ -9,13 +9,13 @@ func GetCountryName(country string) string {
 // GetEmojiFlag gets the emoji flag of a country from its code, e.g.
 // "PK" -> "🇵🇰".
 func GetEmojiFlag(country string) string {
-	return countriesFlags[country].flag
+	return countriesFlags[country].Emoji
 }
 
 // GetEmojiUnicode gets the unicode of a emoji from country code, e.g.
 // "PK" -> "U+1F1F5 U+1F1F0".
 func GetEmojiUnicode(country string) string {
-	return countriesFlags[country].unicode
+	return countriesFlags[country].Unicode
 }
 
 // IsEU takes the country code and returns `true`
@@ -30,8 +30,8 @@ func IsEU(country string) bool {
 }
 
 type CountryFlag struct {
-	flag    string
-	unicode string
+	Emoji   string `json:"emoji,omitempty" csv:"emoji"`
+	Unicode string `json:"unicode,omitempty" csv:"unicode"`
 }
 
 var countriesMap = map[string]string{
