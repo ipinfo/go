@@ -14,6 +14,7 @@ type Core struct {
 	Region      string       `json:"region,omitempty" csv:"region"`
 	Country     string       `json:"country,omitempty" csv:"country"`
 	CountryName string       `json:"country_name,omitempty" csv:"country_name"`
+	CountryFlag CountryFlag  `json:"country_flag,omitempty" csv:"country_flag_,inline"`
 	IsEU        bool         `json:"isEU,omitempty" csv:"isEU"`
 	Location    string       `json:"loc,omitempty" csv:"loc"`
 	Org         string       `json:"org,omitempty" csv:"org"`
@@ -80,11 +81,13 @@ type CoreDomains struct {
 
 func (v *Core) setCountryName() {
 	if v.Country != "" {
-		v.CountryName = countriesMap[v.Country]
+		v.CountryName = GetCountryName(v.Country)
 		v.IsEU = IsEU(v.Country)
+		v.CountryFlag.Emoji = GetCountryFlagEmoji(v.Country)
+		v.CountryFlag.Unicode = GetCountryFlagUnicode(v.Country)
 	}
 	if v.Abuse != nil && v.Abuse.Country != "" {
-		v.Abuse.CountryName = countriesMap[v.Abuse.Country]
+		v.Abuse.CountryName = GetCountryName(v.Abuse.Country)
 	}
 }
 
