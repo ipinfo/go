@@ -6,15 +6,15 @@ func GetCountryName(country string) string {
 	return countriesMap[country]
 }
 
-// GetEmojiFlag gets the emoji flag of a country from its code, e.g.
+// GetCountryFlagEmoji gets the emoji flag of a country from its code, e.g.
 // "PK" -> "🇵🇰".
-func GetEmojiFlag(country string) string {
+func GetCountryFlagEmoji(country string) string {
 	return countriesFlags[country].Emoji
 }
 
-// GetEmojiUnicode gets the unicode of a emoji from country code, e.g.
+// GetCountryFlagUnicode gets the unicode of an emoji from country code, e.g.
 // "PK" -> "U+1F1F5 U+1F1F0".
-func GetEmojiUnicode(country string) string {
+func GetCountryFlagUnicode(country string) string {
 	return countriesFlags[country].Unicode
 }
 
