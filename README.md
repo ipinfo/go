@@ -92,7 +92,7 @@ client := ipinfo.NewClient(nil, nil, token)
 
 ## Country Name
 
-`infoCountry` returns the  ISO 3166 country code and `info.CountryName` returns the entire conuntry name:
+`info.Country` returns the  ISO 3166 country code and `info.CountryName` returns the entire conuntry name:
 
 ```go
 fmt.Println(info.Country)
