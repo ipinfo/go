@@ -21,6 +21,7 @@ Check all the data we have for your IP address [here](https://ipinfo.io/what-is-
 	- [Country Name](#country-name)
 	- [European Union (EU) Country](#european-union-eu-country)
 	- [Country Flag](#country-flag)
+	- [Country Currency](#country-currency)
 - [Map IP Address](#map-ip-address)
 - [Summarize IP Address](#summarize-ip-address)
 - [Caching](#caching)
@@ -119,6 +120,17 @@ fmt.Println(info.CountryFlag.Emoji)
 // Output: 🇳🇿 
 fmt.Println(info.CountryFlag.Unicode)
 // Output: "U+1F1F3 U+1F1FF"
+```
+
+## Country Currency
+
+Get country's currency code and it's symbol with `info.CountryCurrency.Code` and `info.CountryCurrency.Symbol` respectively.
+
+```go
+fmt.Println(info.CountryCurrency.Code)
+// Output: USD 
+fmt.Println(info.CountryCurrency.Symbol)
+// Output: $
 ```
 
 # Map IP Address
