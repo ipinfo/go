@@ -22,6 +22,7 @@ Check all the data we have for your IP address [here](https://ipinfo.io/what-is-
 	- [European Union (EU) Country](#european-union-eu-country)
 	- [Country Flag](#country-flag)
 	- [Country Currency](#country-currency)
+	- [Continent](#continent)
 - [Map IP Address](#map-ip-address)
 - [Summarize IP Address](#summarize-ip-address)
 - [Caching](#caching)
@@ -131,6 +132,17 @@ fmt.Println(info.CountryCurrency.Code)
 // Output: USD 
 fmt.Println(info.CountryCurrency.Symbol)
 // Output: $
+```
+
+## Continent
+
+Get IP's continent code and it's name with `info.Continent.Code` and `info.Continent.Name` respectively.
+
+```go
+fmt.Println(info.Continent.Code)
+// Output: NA 
+fmt.Println(info.Continent.Name)
+// Output: North America
 ```
 
 # Map IP Address
