@@ -22,7 +22,7 @@ Check all the data we have for your IP address [here](https://ipinfo.io/what-is-
 	- [European Union (EU) Country](#european-union-eu-country)
 	- [Country Flag](#country-flag)
 	- [Country Currency](#country-currency)
-	- [Country Continent](#country-continent)
+	- [Continent](#continent)
 - [Map IP Address](#map-ip-address)
 - [Summarize IP Address](#summarize-ip-address)
 - [Caching](#caching)
@@ -134,14 +134,14 @@ fmt.Println(info.CountryCurrency.Symbol)
 // Output: $
 ```
 
-## Country Continent
+## Continent
 
-Get country's continent code and it's name with `info.CountryContinent.Code` and `info.CountryContinent.Name` respectively.
+Get IP's continent code and it's name with `info.Continent.Code` and `info.Continent.Name` respectively.
 
 ```go
-fmt.Println(info.CountryContinent.Code)
+fmt.Println(info.Continent.Code)
 // Output: NA 
-fmt.Println(info.CountryContinent.Name)
+fmt.Println(info.Continent.Name)
 // Output: North America
 ```
 

@@ -30,16 +30,16 @@ func GetCountryCurrencySymbol(country string) string {
 	return countriesCurrencies[country].Symbol
 }
 
-// GetCountryContinentCode gets the continent code of a country from its code, e.g.
+// GetContinentCode gets the continent code of a country from its code, e.g.
 // "PK" -> "AS".
-func GetCountryContinentCode(country string) string {
-	return countriesContinents[country].Code
+func GetContinentCode(country string) string {
+	return continents[country].Code
 }
 
-// GetCountryContinentName gets the name of continent from country code, e.g.
+// GetContinentName gets the name of continent from country code, e.g.
 // "PK" -> "Asia".
-func GetCountryContinentName(country string) string {
-	return countriesContinents[country].Name
+func GetContinentName(country string) string {
+	return continents[country].Name
 }
 
 // IsEU takes the country code and returns `true`
@@ -63,7 +63,7 @@ type CountryCurrency struct {
 	Symbol string `json:"symbol,omitempty" csv:"symbol"`
 }
 
-type CountryContinent struct {
+type Continent struct {
 	Code string `json:"code,omitempty" csv:"code"`
 	Name string `json:"name,omitempty" csv:"name"`
 }
@@ -833,7 +833,7 @@ var countriesCurrencies = map[string]CountryCurrency{
 	"ZW": {"ZWL", "$"},
 }
 
-var countriesContinents = map[string]CountryContinent{
+var continents = map[string]Continent{
 	"BD": {"AS", "Asia"},
 	"BE": {"EU", "Europe"},
 	"BF": {"AF", "Africa"},
