@@ -281,7 +281,7 @@ func (c *Client) GetIPInfoBatch(
 	}
 	for _, ip := range ips {
 		if ip == nil {
-			return nil, fmt.Errorf("invalid IP address")
+			continue
 		}
 		ipstrs = append(ipstrs, ip.String())
 	}
