@@ -1,3 +1,14 @@
+# 2.9.1
+
+- Fixed default useragent.
+- Fixed `GetIPInfoBatch` panic on empty token or invalid IP.
+
+# 2.9.0
+
+- Added an `CountryFlag` field to `Core`.
+- Added an `CountryCurrency` field to `Core`.
+- Added an `Continent` field to `Core`.
+
 # 2.8.0
 
 - Added an `IsEU` field to `Core`, which checks whether the IP geolocates to a
