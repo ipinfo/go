@@ -2,6 +2,7 @@ package ipinfo
 
 import (
 	"net"
+	"net/netip"
 )
 
 // Core represents data from the Core API.
@@ -107,6 +108,12 @@ func GetIPInfo(ip net.IP) (*Core, error) {
 // GetIPInfo returns the details for the specified IP.
 func (c *Client) GetIPInfo(ip net.IP) (*Core, error) {
 	relURL := ""
+	if ip != nil && isBogon(netip.MustParseAddr(ip.String())) {
+		bogonResponse := new(Core)
+		bogonResponse.Bogon = true
+		bogonResponse.IP = ip
+		return bogonResponse, nil
+	}
 	if ip != nil {
 		relURL = ip.String()
 	}
