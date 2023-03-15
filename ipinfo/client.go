@@ -159,6 +159,11 @@ type ErrorResponse struct {
 }
 
 func (r *ErrorResponse) Error() string {
+	if r.Response.StatusCode == http.StatusTooManyRequests {
+		return fmt.Sprintf("%v %v: %d You've hit the daily limit for the unauthenticated API. Please visit https://ipinfo.io/signup to get 50k requests per month for free.",
+			r.Response.Request.Method, r.Response.Request.URL,
+			r.Response.StatusCode)
+	}
 	return fmt.Sprintf("%v %v: %d %v",
 		r.Response.Request.Method, r.Response.Request.URL,
 		r.Response.StatusCode, r.Err)
@@ -170,21 +175,6 @@ func (r *ErrorResponse) Error() string {
 func checkResponse(r *http.Response) error {
 	if c := r.StatusCode; 200 <= c && c <= 299 {
 		return nil
-	}
-	if r.StatusCode == 429 {
-		errData := []byte(`{
-			"status": "429",
-			"error": {
-				"title": "Rate limit exceeded", 
-				"message": "You've hit the daily limit for the unauthenticated API. Please visit https://ipinfo.io/signup to get 50k requests per month for free."
-				}
-		}`)
-		errorResponse := &ErrorResponse{Response: r}
-		err := json.Unmarshal(errData, errorResponse)
-		if err != nil {
-			return err
-		}
-		return errorResponse
 	}
 	errorResponse := &ErrorResponse{Response: r}
 	data, err := ioutil.ReadAll(r.Body)
