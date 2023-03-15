@@ -159,6 +159,11 @@ type ErrorResponse struct {
 }
 
 func (r *ErrorResponse) Error() string {
+	if r.Response.StatusCode == http.StatusTooManyRequests {
+		return fmt.Sprintf("%v %v: %d You've hit the daily limit for the unauthenticated API. Please visit https://ipinfo.io/signup to get 50k requests per month for free.",
+			r.Response.Request.Method, r.Response.Request.URL,
+			r.Response.StatusCode)
+	}
 	return fmt.Sprintf("%v %v: %d %v",
 		r.Response.Request.Method, r.Response.Request.URL,
 		r.Response.StatusCode, r.Err)
