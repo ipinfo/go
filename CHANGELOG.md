@@ -1,3 +1,7 @@
+# 2.9.2
+
+- Custom error message on 429(Too many requests).
+
 # 2.9.1
 
 - Fixed default useragent.
