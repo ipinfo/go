@@ -16,6 +16,7 @@ type Core struct {
 	Country         string          `json:"country,omitempty" csv:"country"`
 	CountryName     string          `json:"country_name,omitempty" csv:"country_name"`
 	CountryFlag     CountryFlag     `json:"country_flag,omitempty" csv:"country_flag_,inline"`
+	CountryFlagURL  string          `json:"country_flag_url,omitempty" csv:"country_flag_url"`
 	CountryCurrency CountryCurrency `json:"country_currency,omitempty" csv:"country_currency_,inline"`
 	Continent       Continent       `json:"continent,omitempty" csv:"continent_,inline"`
 	IsEU            bool            `json:"isEU,omitempty" csv:"isEU"`
@@ -88,6 +89,7 @@ func (v *Core) setCountryName() {
 		v.IsEU = IsEU(v.Country)
 		v.CountryFlag.Emoji = GetCountryFlagEmoji(v.Country)
 		v.CountryFlag.Unicode = GetCountryFlagUnicode(v.Country)
+		v.CountryFlagURL = GetCountryFlagURL(v.Country)
 		v.CountryCurrency.Code = GetCountryCurrencyCode(v.Country)
 		v.CountryCurrency.Symbol = GetCountryCurrencySymbol(v.Country)
 		v.Continent.Code = GetContinentCode(v.Country)
