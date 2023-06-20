@@ -1,3 +1,7 @@
+# 2.9.3
+
+- Added an `CountryFlagURL` field to `Core`.
+
 # 2.9.2
 
 - Custom error message on 429(Too many requests).

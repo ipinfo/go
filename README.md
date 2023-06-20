@@ -123,6 +123,15 @@ fmt.Println(info.CountryFlag.Unicode)
 // Output: "U+1F1F3 U+1F1FF"
 ```
 
+## Country Flag URL
+
+Get the link of a country's flag image.
+
+```go
+fmt.Println(info.CountryFlagURL)
+// Output: https://cdn.ipinfo.io/static/images/countries-flags/US.svg"
+```
+
 ## Country Currency
 
 Get country's currency code and it's symbol with `info.CountryCurrency.Code` and `info.CountryCurrency.Symbol` respectively.
