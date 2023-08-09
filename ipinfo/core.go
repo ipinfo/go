@@ -24,7 +24,7 @@ type Core struct {
 	Org             string          `json:"org,omitempty" csv:"org" yaml:"org,omitempty"`
 	Postal          string          `json:"postal,omitempty" csv:"postal" yaml:"postal,omitempty"`
 	Timezone        string          `json:"timezone,omitempty" csv:"timezone" yaml:"timezone,omitempty"`
-	ASN             *CoreASN        `json:"asn,omitempty" csv:"asn_,inline" yaml:"ASN,omitempty"`
+	ASN             *CoreASN        `json:"asn,omitempty" csv:"asn_,inline" yaml:"asn,omitempty"`
 	Company         *CoreCompany    `json:"company,omitempty" csv:"company_,inline" yaml:"company,omitempty"`
 	Carrier         *CoreCarrier    `json:"carrier,omitempty" csv:"carrier_,inline" yaml:"carrier,omitempty"`
 	Privacy         *CorePrivacy    `json:"privacy,omitempty" csv:"privacy_,inline" yaml:"privacy,omitempty"`
