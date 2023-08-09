@@ -3,10 +3,10 @@
 [![License](http://img.shields.io/:license-apache-blue.svg)](LICENSE)
 [![Go Reference](https://pkg.go.dev/badge/github.com/ipinfo/go/v2/ipinfo.svg)](https://pkg.go.dev/github.com/ipinfo/go/v2/ipinfo)
 
-This is the official Go client library for the [IPinfo.io](https://ipinfo.io) IP address API, allowing you to lookup your own IP address, or get any of the following details for other IP addresses:
+This is the official Go client library for the [IPinfo.io](https://ipinfo.io) IP address API, allowing you to look up your own IP address, or get any of the following details for other IP addresses:
 
-- [IP to Geolocation](https://ipinfo.io/ip-geolocation-api) (city, region, country, postal code, latitude and longitude)
-- [IP to ASN](https://ipinfo.io/asn-api) (ISP or network operator, associated domain name, and type, such as business, hosting or company)
+- [IP to Geolocation](https://ipinfo.io/ip-geolocation-api) (city, region, country, postal code, latitude, and longitude)
+- [IP to ASN](https://ipinfo.io/asn-api) (ISP or network operator, associated domain name, and type, such as business, hosting, or company)
 - [IP to Company](https://ipinfo.io/ip-company-api) (the name and domain of the business that uses the IP address)
 - [IP to Carrier](https://ipinfo.io/ip-carrier-api) (the name of the mobile carrier and MNC and MCC for that carrier if the IP is used exclusively for mobile traffic)
 
@@ -37,7 +37,7 @@ You'll need an IPinfo API access token, which you can get by signing up for a fr
 
 The free plan is limited to 50,000 requests per month, and doesn't include some of the data fields such as IP type and company data. To enable all the data fields and additional request volumes see [https://ipinfo.io/pricing](https://ipinfo.io/pricing)
 
-You can find the full package level documentation here: https://pkg.go.dev/github.com/ipinfo/go/v2/ipinfo
+You can find the full package-level documentation here: https://pkg.go.dev/github.com/ipinfo/go/v2/ipinfo
 
 ## Installation
 
@@ -78,11 +78,11 @@ func main() {
 }
 ```
 
-This data is available even on our free tier which includes upto 50,000 IP geolocation requests per month.
+This data is available even on our free tier which includes up to 50,000 IP geolocation requests per month.
 
 # Authentication
 
-The IPinfo Go library ca be authenticated with your IPinfo API access token, which is passed as the third positional argument of the `ipinfo.NewClient()` method. Your IPInfo access token can be found in the account section of IPinfo's website after you have signed in : https://ipinfo.io/account/token
+The IPinfo Go library can be authenticated with your IPinfo API access token, which is passed as the third positional argument of the `ipinfo.NewClient()` method. Your IPInfo access token can be found in the account section of IPinfo's website after you have signed in: https://ipinfo.io/account/token
 
 ```go
 const token = "YOUR_TOKEN"
@@ -105,7 +105,7 @@ fmt.Println(info.CountryName)
 
 ## European Union (EU) Country
 
-`info.IsEU` returns a boolean response to see if a country is a Eurpoean Union country or not.
+`info.IsEU` returns a boolean response to see if a country is a European Union country or not.
 
 ```go
 fmt.Println(info.IsEU)
@@ -114,7 +114,7 @@ fmt.Println(info.IsEU)
 
 ## Country Flag
 
-Get country flag as an emoji and it's  unicode value with `info.CountryFlag.Emoji` and `info.CountryFlag.Unicode` respectively.
+Get country flag as an emoji and its Unicode value with `info.CountryFlag.Emoji` and `info.CountryFlag.Unicode` respectively.
 
 ```go
 fmt.Println(info.CountryFlag.Emoji)
@@ -134,7 +134,7 @@ fmt.Println(info.CountryFlagURL)
 
 ## Country Currency
 
-Get country's currency code and it's symbol with `info.CountryCurrency.Code` and `info.CountryCurrency.Symbol` respectively.
+Get country's currency code and its symbol with `info.CountryCurrency.Code` and `info.CountryCurrency.Symbol` respectively.
 
 ```go
 fmt.Println(info.CountryCurrency.Code)
@@ -145,7 +145,7 @@ fmt.Println(info.CountryCurrency.Symbol)
 
 ## Continent
 
-Get IP's continent code and it's name with `info.Continent.Code` and `info.Continent.Name` respectively.
+Get the IP's continent code and its name with `info.Continent.Code` and `info.Continent.Name` respectively.
 
 ```go
 fmt.Println(info.Continent.Code)
@@ -156,7 +156,7 @@ fmt.Println(info.Continent.Name)
 
 # Map IP Address
 
-You can map upto 500,000 IP address all at once using the `GetIPMap` command. You can input:
+You can map up to 500,000 IP addresses all at once using the `GetIPMap` command. You can input:
 
 - IP addresses (IPV4 and IPV6 both)
 - IP Ranges or Netblock
@@ -240,7 +240,7 @@ func main() {
 
 # Batch Operations / Bulk Lookup
 
-You can do batch lookup or bulk lookup quite easily as well. The inputs supported:
+You can do batch lookups or bulk lookups quite easily as well. The inputs supported:
 
 - IP addresses. IPV4 and IPV6 both
 - ASN
@@ -295,11 +295,11 @@ Examples of Batch / Bulk Lookup:
 - [Batch Core str](/example/batch-core-str)
 - [Batch Generic](/example/batch-generic)
 
-The loop declaration in the batch lookup are to showcase the "caching" capability of the IPinfo package.
+The loop declaration in the batch lookup showcases the "caching" capability of the IPinfo package.
 
 # Other Libraries
 
-There are official [IPinfo client libraries](https://ipinfo.io/developers/libraries) available for many languages including PHP, Python, Go, Java, Ruby, and many popular frameworks such as Django, Rails and Laravel. There are also many third party libraries and integrations available for our API.
+There are official [IPinfo client libraries](https://ipinfo.io/developers/libraries) available for many languages including PHP, Python, Go, Java, Ruby, and many popular frameworks such as Django, Rails, and Laravel. There are also many third-party libraries and integrations available for our API.
 
 # About IPinfo
 
