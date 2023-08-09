@@ -1,6 +1,10 @@
+# 2.9.4
+
+- Removing null values while printing in `yaml` format
+
 # 2.9.3
 
-- Added an `CountryFlagURL` field to `Core`.
+- Added a `CountryFlagURL` field to `Core`.
 
 # 2.9.2
 
