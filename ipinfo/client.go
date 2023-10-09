@@ -12,8 +12,9 @@ import (
 )
 
 const (
-	defaultBaseURL   = "https://ipinfo.io/"
-	defaultUserAgent = "IPinfoClient/Go/2.9.4"
+	defaultBaseURL     = "https://ipinfo.io/"
+	defaultBaseURLIPv6 = "https://v6.ipinfo.io/"
+	defaultUserAgent   = "IPinfoClient/Go/2.9.4"
 )
 
 // A Client is the main handler to communicate with the IPinfo API.
@@ -34,6 +35,10 @@ type Client struct {
 
 	// The API token used for authorization for more data and higher limits.
 	Token string
+
+	// IPv6 indicates whether the client should use IPv6 for API requests.
+	// If set to true, the client will use IPv6 requests; otherwise, it will use IPv4.
+	IPv6 bool
 }
 
 // NewClient returns a new IPinfo API client.
@@ -78,6 +83,14 @@ func (c *Client) newRequest(
 	}
 
 	u := new(url.URL)
+
+	var baseURL string
+	if c.IPv6 {
+		baseURL = defaultBaseURLIPv6
+	} else {
+		baseURL = defaultBaseURL
+	}
+	urlStr = baseURL + urlStr
 
 	// get final URL path.
 	if rel, err := url.Parse(urlStr); err == nil {
@@ -207,3 +220,4 @@ func SetToken(token string) {
 func (c *Client) SetToken(token string) {
 	c.Token = token
 }
+
