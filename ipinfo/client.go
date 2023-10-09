@@ -84,11 +84,9 @@ func (c *Client) newRequest(
 
 	u := new(url.URL)
 
-	var baseURL string
+	baseURL := defaultBaseURL
 	if c.IPv6 {
 		baseURL = defaultBaseURLIPv6
-	} else {
-		baseURL = defaultBaseURL
 	}
 	urlStr = baseURL + urlStr
 
@@ -220,4 +218,3 @@ func SetToken(token string) {
 func (c *Client) SetToken(token string) {
 	c.Token = token
 }
-
