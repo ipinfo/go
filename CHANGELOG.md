@@ -1,3 +1,7 @@
+# 2.10.0
+
+- Added support for looking up your v6 IP via `GetIPInfoV6`.
+
 # 2.9.4
 
 - Removing null values while printing in `yaml` format
