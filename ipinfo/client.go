@@ -35,10 +35,6 @@ type Client struct {
 
 	// The API token used for authorization for more data and higher limits.
 	Token string
-
-	// IPv6 indicates whether the client should use IPv6 for API requests.
-	// If set to true, the client will use IPv6 requests; otherwise, it will use IPv4.
-	IPv6 bool
 }
 
 // NewClient returns a new IPinfo API client.
@@ -69,14 +65,35 @@ func NewClient(
 	}
 }
 
-// `newRequest` creates an API request. A relative URL can be provided in
-// urlStr, in which case it is resolved relative to the BaseURL of the Client.
-// Relative URLs should always be specified without a preceding slash.
+// newRequest for IPV4
 func (c *Client) newRequest(
 	ctx context.Context,
 	method string,
 	urlStr string,
 	body io.Reader,
+) (*http.Request, error) {
+	return c.newRequestbase(ctx, method, urlStr, body, false)
+}
+
+// newRequest for IPV6
+func (c *Client) newRequestV6(
+	ctx context.Context,
+	method string,
+	urlStr string,
+	body io.Reader,
+) (*http.Request, error) {
+	return c.newRequestbase(ctx, method, urlStr, body, true)
+}
+
+// `newRequest` creates an API request. A relative URL can be provided in
+// urlStr, in which case it is resolved relative to the BaseURL of the Client.
+// Relative URLs should always be specified without a preceding slash.
+func (c *Client) newRequestbase(
+	ctx context.Context,
+	method string,
+	urlStr string,
+	body io.Reader,
+	useIPv6 bool,
 ) (*http.Request, error) {
 	if ctx == nil {
 		ctx = context.Background()
@@ -84,11 +101,9 @@ func (c *Client) newRequest(
 
 	u := new(url.URL)
 
-	baseURL := defaultBaseURL
-	if c.IPv6 {
-		baseURL = defaultBaseURLIPv6
+	if useIPv6 {
+		c.BaseURL, _ = url.Parse(defaultBaseURLIPv6)
 	}
-	urlStr = baseURL + urlStr
 
 	// get final URL path.
 	if rel, err := url.Parse(urlStr); err == nil {
