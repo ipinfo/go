@@ -72,7 +72,7 @@ func (c *Client) newRequest(
 	urlStr string,
 	body io.Reader,
 ) (*http.Request, error) {
-	return c.newRequestbase(ctx, method, urlStr, body, false)
+	return c.newRequestBase(ctx, method, urlStr, body, false)
 }
 
 // newRequest for IPV6
@@ -82,13 +82,13 @@ func (c *Client) newRequestV6(
 	urlStr string,
 	body io.Reader,
 ) (*http.Request, error) {
-	return c.newRequestbase(ctx, method, urlStr, body, true)
+	return c.newRequestBase(ctx, method, urlStr, body, true)
 }
 
 // `newRequest` creates an API request. A relative URL can be provided in
 // urlStr, in which case it is resolved relative to the BaseURL of the Client.
 // Relative URLs should always be specified without a preceding slash.
-func (c *Client) newRequestbase(
+func (c *Client) newRequestBase(
 	ctx context.Context,
 	method string,
 	urlStr string,
@@ -101,16 +101,17 @@ func (c *Client) newRequestbase(
 
 	u := new(url.URL)
 
+	baseURL := c.BaseURL
 	if useIPv6 {
-		c.BaseURL, _ = url.Parse(defaultBaseURLIPv6)
+		baseURL, _ = url.Parse(defaultBaseURLIPv6)
 	}
 
 	// get final URL path.
 	if rel, err := url.Parse(urlStr); err == nil {
-		u = c.BaseURL.ResolveReference(rel)
+		u = baseURL.ResolveReference(rel)
 	} else if strings.ContainsRune(urlStr, ':') {
 		// IPv6 strings fail to parse as URLs, so let's add it as a URL Path.
-		*u = *c.BaseURL
+		*u = *baseURL
 		u.Path += urlStr
 	} else {
 		return nil, err
