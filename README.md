@@ -39,7 +39,7 @@ The free plan is limited to 50,000 requests per month, and doesn't include some 
 
 You can find the full package-level documentation here: https://pkg.go.dev/github.com/ipinfo/go/v2/ipinfo
 
-⚠️ Note: This library does not currently support our newest free API https://ipinfo.io/lite. If you’d like to use IPinfo Lite, you can call the [endpoint directly](https://ipinfo.io/developers/lite-api) using your preferred HTTP client. Developers are also welcome to contribute support for Lite by submitting a pull request.
+The library also supports the Lite API, see the [Lite API section](#lite-api) for more info.
 
 ## Installation
 
@@ -298,6 +298,41 @@ Examples of Batch / Bulk Lookup:
 - [Batch Generic](/example/batch-generic)
 
 The loop declaration in the batch lookup showcases the "caching" capability of the IPinfo package.
+
+### Lite API
+
+The library gives the possibility to use the [Lite API](https://ipinfo.io/developers/lite-api) too, authentication with your token is still required.
+
+The returned details are slightly different from the Core API.
+
+```go
+package main
+
+import (
+	"fmt"
+	"log"
+	"net"
+	"github.com/ipinfo/go/v2/ipinfo"
+)
+
+func main() {
+	const token = "YOUR_TOKEN"
+	
+	// Create a Lite client
+	client := ipinfo.NewLiteClient(nil, nil, token)
+	
+	// Or use the package-level client
+	ipinfo.SetLiteToken(token)
+	
+	info, err := ipinfo.GetIPInfoLite(net.ParseIP("8.8.8.8"))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(info.ASN)         // AS15169
+	fmt.Println(info.Country)     // United States
+	fmt.Println(info.CountryCode) // US
+}
 
 # Other Libraries
 
