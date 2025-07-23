@@ -1,3 +1,7 @@
+# 2.11.0
+
+- Add support for IPinfo Lite API
+
 # 2.10.0
 
 - Added support for looking up your v6 IP via `GetIPInfoV6`.
@@ -99,19 +103,19 @@
 # 2.2.0
 
 - The following functions are now private:
-    - `Client.Do`
-    - `Client.NewRequest`
-    - `CheckResponse`
+  - `Client.Do`
+  - `Client.NewRequest`
+  - `CheckResponse`
 - The following **new** functions now exist, which operate on the IPinfo
   `/batch` endpoint:
-    - `Client.GetBatch`
-    - `Client.GetIPInfoBatch`
-    - `Client.GetIPStrInfoBatch`
-    - `Client.GetASNDetailsBatch`
-    - `ipinfo.GetBatch`
-    - `ipinfo.GetIPInfoBatch`
-    - `ipinfo.GetIPStrInfoBatch`
-    - `ipinfo.GetASNDetailsBatch`
+  - `Client.GetBatch`
+  - `Client.GetIPInfoBatch`
+  - `Client.GetIPStrInfoBatch`
+  - `Client.GetASNDetailsBatch`
+  - `ipinfo.GetBatch`
+  - `ipinfo.GetIPInfoBatch`
+  - `ipinfo.GetIPStrInfoBatch`
+  - `ipinfo.GetASNDetailsBatch`
 
 # 2.1.1
 
