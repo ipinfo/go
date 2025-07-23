@@ -1,0 +1,36 @@
+name: Run tests
+
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go: ["1.18", "1.19", "1.20", "1.21", "1.22", "1.23", "1.24"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go ${{ matrix.go }}
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.go }}
+
+      - name: Build
+        run: go build -v ./...
+
+      - name: gofmt
+        run: |
+          unformatted_files=$(gofmt -l .)
+          if [ -n "$unformatted_files" ]; then
+            echo "The following files are not Go formatted:"
+            echo "$unformatted_files"
+            echo "Please run 'gofmt -w .' to fix them."
+            exit 1
+          fi
+          echo "All Go files are well formatted."
