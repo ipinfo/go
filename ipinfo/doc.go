@@ -10,7 +10,7 @@ For example:
 
 	info, err := ipinfo.GetIPInfo(net.ParseIP("8.8.8.8"))
 
-Authorization
+# Authorization
 
 To perform authorized API calls with more data and higher limits, pass in a
 non-empty token to NewClient. For example:
