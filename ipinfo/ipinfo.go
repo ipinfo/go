@@ -9,9 +9,13 @@ var DefaultLiteClient *LiteClient
 // Package-level Core bundle client
 var DefaultCoreClient *CoreClient
 
+// Package-level Plus bundle client
+var DefaultPlusClient *PlusClient
+
 func init() {
 	// Create global clients for legacy, Lite, Core APIs
 	DefaultClient = NewClient(nil, nil, "")
 	DefaultLiteClient = NewLiteClient(nil, nil, "")
 	DefaultCoreClient = NewCoreClient(nil, nil, "")
+	DefaultPlusClient = NewPlusClient(nil, nil, "")
 }
