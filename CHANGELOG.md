@@ -1,3 +1,8 @@
+# 2.12.0
+
+- Add support for IPinfo Core API
+- Add support for IPinfo Plus API
+
 # 2.11.0
 
 - Add support for IPinfo Lite API
