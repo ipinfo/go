@@ -12,17 +12,16 @@ This is the official Go client library for the [IPinfo.io](https://ipinfo.io) IP
 
 Check all the data we have for your IP address [here](https://ipinfo.io/what-is-my-ip).
 
-
 - [Getting Started](#getting-started)
-	- [Installation](#installation)
-	- [Quickstart](#quickstart)
+  - [Installation](#installation)
+  - [Quickstart](#quickstart)
 - [Authentication](#authentication)
 - [Internationalization](#internationalization)
-	- [Country Name](#country-name)
-	- [European Union (EU) Country](#european-union-eu-country)
-	- [Country Flag](#country-flag)
-	- [Country Currency](#country-currency)
-	- [Continent](#continent)
+  - [Country Name](#country-name)
+  - [European Union (EU) Country](#european-union-eu-country)
+  - [Country Flag](#country-flag)
+  - [Country Currency](#country-currency)
+  - [Continent](#continent)
 - [Map IP Address](#map-ip-address)
 - [Summarize IP Address](#summarize-ip-address)
 - [Caching](#caching)
@@ -31,7 +30,6 @@ Check all the data we have for your IP address [here](https://ipinfo.io/what-is-
 - [About IPinfo](#about-ipinfo)
 
 # Getting Started
-
 
 You'll need an IPinfo API access token, which you can get by signing up for a free account at [https://ipinfo.io/signup](https://ipinfo.io/signup).
 
@@ -51,7 +49,6 @@ go get github.com/ipinfo/go/v2/ipinfo
 
 Basic usage of the package.
 
-
 ```go
 package main
 
@@ -64,7 +61,7 @@ import (
 
 func main() {
 	const token = "YOUR_TOKEN"
-	
+
 	// params: httpClient, cache, token. `http.DefaultClient` and no cache will be used in case of `nil`.
 	client := ipinfo.NewClient(nil, nil, token)
 
@@ -96,7 +93,7 @@ client := ipinfo.NewClient(nil, nil, token)
 
 ## Country Name
 
-`info.Country` returns the  ISO 3166 country code and `info.CountryName` returns the entire conuntry name:
+`info.Country` returns the ISO 3166 country code and `info.CountryName` returns the entire conuntry name:
 
 ```go
 fmt.Println(info.Country)
@@ -120,7 +117,7 @@ Get country flag as an emoji and its Unicode value with `info.CountryFlag.Emoji`
 
 ```go
 fmt.Println(info.CountryFlag.Emoji)
-// Output: 🇳🇿 
+// Output: 🇳🇿
 fmt.Println(info.CountryFlag.Unicode)
 // Output: "U+1F1F3 U+1F1FF"
 ```
@@ -140,7 +137,7 @@ Get country's currency code and its symbol with `info.CountryCurrency.Code` and 
 
 ```go
 fmt.Println(info.CountryCurrency.Code)
-// Output: USD 
+// Output: USD
 fmt.Println(info.CountryCurrency.Symbol)
 // Output: $
 ```
@@ -151,7 +148,7 @@ Get the IP's continent code and its name with `info.Continent.Code` and `info.Co
 
 ```go
 fmt.Println(info.Continent.Code)
-// Output: NA 
+// Output: NA
 fmt.Println(info.Continent.Name)
 // Output: North America
 ```
@@ -205,7 +202,7 @@ See the output example map: https://ipinfo.io/tools/map/f27c7d40-3ff0-4ac2-878f-
 
 # Summarize IP Address
 
-Summarize IP addresses with `GetIPSummary` and output a report. 
+Summarize IP addresses with `GetIPSummary` and output a report.
 
 ```go
 package main
@@ -247,7 +244,6 @@ You can do batch lookups or bulk lookups quite easily as well. The inputs suppor
 - IP addresses. IPV4 and IPV6 both
 - ASN
 - Specific field endpoint of an IP address e.g. `8.8.8.8/country`
-   
 
 ```go
 package main
@@ -317,13 +313,13 @@ import (
 
 func main() {
 	const token = "YOUR_TOKEN"
-	
+
 	// Create a Lite client
 	client := ipinfo.NewLiteClient(nil, nil, token)
-	
+
 	// Or use the package-level client
 	ipinfo.SetLiteToken(token)
-	
+
 	info, err := ipinfo.GetIPInfoLite(net.ParseIP("8.8.8.8"))
 	if err != nil {
 		log.Fatal(err)
@@ -332,6 +328,96 @@ func main() {
 	fmt.Println(info.ASN)         // AS15169
 	fmt.Println(info.Country)     // United States
 	fmt.Println(info.CountryCode) // US
+}
+```
+
+### Core API
+
+The library also supports the [Core API](https://ipinfo.io/developers/data-types#core-data), which provides city-level geolocation with nested geo and AS objects. Authentication with your token is required.
+
+```go
+package main
+
+import (
+	"fmt"
+	"log"
+	"net"
+	"github.com/ipinfo/go/v2/ipinfo"
+)
+
+func main() {
+	const token = "YOUR_TOKEN"
+	client := ipinfo.NewCoreClient(nil, nil, token)
+
+	info, err := client.GetIPInfo(net.ParseIP("8.8.8.8"))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(info.IP)          // 8.8.8.8
+	fmt.Println(info.Geo.City)    // Mountain View
+	fmt.Println(info.Geo.Country) // United States
+	fmt.Println(info.AS.ASN)      // AS15169
+	fmt.Println(info.AS.Name)     // Google LLC
+}
+```
+
+### Plus API
+
+The library also supports the [Plus API](https://ipinfo.io/developers/data-types#plus-data), which provides enhanced data including mobile carrier info and privacy detection. Authentication with your token is required.
+
+```go
+package main
+
+import (
+	"fmt"
+	"log"
+	"net"
+	"github.com/ipinfo/go/v2/ipinfo"
+)
+
+func main() {
+	const token = "YOUR_TOKEN"
+	client := ipinfo.NewPlusClient(nil, nil, token)
+
+	info, err := client.GetIPInfo(net.ParseIP("8.8.8.8"))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(info.IP)              // 8.8.8.8
+	fmt.Println(info.Geo.City)        // Mountain View
+	fmt.Println(info.Mobile)          // mobile carrier info
+	fmt.Println(info.Anonymous.Proxy) // false
+}
+```
+
+### Residential Proxy API
+
+The library also supports the [Residential Proxy API](https://ipinfo.io/developers/residential-proxy-api), which allows you to check if an IP address is a residential proxy. Authentication with your token is required.
+
+```go
+package main
+
+import (
+	"fmt"
+	"log"
+	"github.com/ipinfo/go/v2/ipinfo"
+)
+
+func main() {
+	const token = "YOUR_TOKEN"
+	client := ipinfo.NewClient(nil, nil, token)
+
+	resproxy, err := client.GetResproxy("175.107.211.204")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(resproxy.IP)              // 175.107.211.204
+	fmt.Println(resproxy.LastSeen)        // 2025-01-20
+	fmt.Println(resproxy.PercentDaysSeen) // 0.85
+	fmt.Println(resproxy.Service)         // Bright Data
 }
 ```
 
