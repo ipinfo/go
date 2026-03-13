@@ -91,18 +91,25 @@ type PlusAS struct {
 
 // PlusMobile represents the mobile object in Plus API response.
 type PlusMobile struct {
-	Name string `json:"name,omitempty"`
-	MCC  string `json:"mcc,omitempty"`
-	MNC  string `json:"mnc,omitempty"`
+	MCC         string `json:"mcc,omitempty"`
+	MNC         string `json:"mnc,omitempty"`
+	CountryCode string `json:"country_code,omitempty"`
 }
 
 // PlusAnonymous represents the anonymous object in Plus API response.
 type PlusAnonymous struct {
-	IsProxy bool   `json:"is_proxy"`
-	IsRelay bool   `json:"is_relay"`
-	IsTor   bool   `json:"is_tor"`
-	IsVPN   bool   `json:"is_vpn"`
-	Name    string `json:"name,omitempty"`
+	IsProxy    bool   `json:"is_proxy"`
+	IsRelay    bool   `json:"is_relay"`
+	IsTor      bool   `json:"is_tor"`
+	IsVPN      bool   `json:"is_vpn"`
+	IsResProxy bool   `json:"is_res_proxy"`
+	Name       string `json:"name,omitempty"`
+	LastSeen   string `json:"last_seen,omitempty"`
+
+	// PercentDaysSeen is the percentage of days the IP was seen using an
+	// anonymous service over the trailing 90 days. Higher values indicate
+	// more persistent anonymiser usage.
+	PercentDaysSeen int `json:"percent_days_seen"`
 }
 
 // PlusAbuse represents the abuse object in Plus API response.
