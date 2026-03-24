@@ -612,7 +612,7 @@ var countriesCurrencies = map[string]CountryCurrency{
 	"BD": {"BDT", "৳"},
 	"BE": {"EUR", "€"},
 	"BF": {"XOF", "CFA"},
-	"BG": {"BGN", "лв"},
+	"BG": {"EUR", "€"},
 	"BH": {"BHD", ".د.ب"},
 	"BI": {"BIF", "FBu"},
 	"BJ": {"XOF", "CFA"},
