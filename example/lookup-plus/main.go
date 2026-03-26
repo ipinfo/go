@@ -40,8 +40,13 @@ func main() {
 			info.Mobile.Name, info.Mobile.MCC, info.Mobile.MNC)
 	}
 	if info.Anonymous != nil {
-		fmt.Printf("Anonymous - Proxy: %v, Relay: %v, Tor: %v, VPN: %v\n",
-			info.Anonymous.IsProxy, info.Anonymous.IsRelay, info.Anonymous.IsTor, info.Anonymous.IsVPN)
+		fmt.Printf("Anonymous - Proxy: %v, Relay: %v, Tor: %v, VPN: %v, ResProxy: %v\n",
+			info.Anonymous.IsProxy, info.Anonymous.IsRelay, info.Anonymous.IsTor,
+			info.Anonymous.IsVPN, info.Anonymous.IsResProxy)
+		if info.Anonymous.Name != "" {
+			fmt.Printf("Anonymous Service: %s (last seen: %s, %d%% of days)\n",
+				info.Anonymous.Name, info.Anonymous.LastSeen, info.Anonymous.PercentDaysSeen)
+		}
 	}
 	fmt.Printf("Anonymous: %v\n", info.IsAnonymous)
 	fmt.Printf("Anycast: %v\n", info.IsAnycast)
