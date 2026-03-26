@@ -36,8 +36,8 @@ func main() {
 		fmt.Printf("AS Type: %s\n", info.AS.Type)
 	}
 	if info.Mobile != nil {
-		fmt.Printf("Mobile - MCC: %s, MNC: %s, Country: %s\n",
-			info.Mobile.MCC, info.Mobile.MNC, info.Mobile.CountryCode)
+		fmt.Printf("Mobile - Name: %s, MCC: %s, MNC: %s\n",
+			info.Mobile.Name, info.Mobile.MCC, info.Mobile.MNC)
 	}
 	if info.Anonymous != nil {
 		fmt.Printf("Anonymous - Proxy: %v, Relay: %v, Tor: %v, VPN: %v, ResProxy: %v\n",

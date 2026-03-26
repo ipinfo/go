@@ -91,9 +91,9 @@ type PlusAS struct {
 
 // PlusMobile represents the mobile object in Plus API response.
 type PlusMobile struct {
-	MCC         string `json:"mcc,omitempty"`
-	MNC         string `json:"mnc,omitempty"`
-	CountryCode string `json:"country_code,omitempty"`
+	Name string `json:"name,omitempty"`
+	MCC  string `json:"mcc,omitempty"`
+	MNC  string `json:"mnc,omitempty"`
 }
 
 // PlusAnonymous represents the anonymous object in Plus API response.
