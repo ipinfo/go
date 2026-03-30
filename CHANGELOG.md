@@ -1,3 +1,8 @@
+# 2.14.0
+
+- Update Bulgaria currency from BGN to EUR
+- Add missing fields to PlusAnonymous struct (IsResProxy, LastSeen, PercentDaysSeen)
+
 # 2.13.0
 
 - Add support for Residential Proxy Detection API
